@@ -11,7 +11,7 @@
         FilmStore: useFilmStore()
       }
     },
-    mounted() {
+    mounted() { // при монтировании экземпляра загружаем файлы с json
       this.FilmStore.moveToPosters();
     }
   }

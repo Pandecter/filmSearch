@@ -10,7 +10,7 @@ export const useFilmStore = defineStore('filmStorage', {
   },
   actions : {
     moveToPosters(){
-      alert('Move to poster init')
+      //alert('Move to poster init')
       for(let i = 0; i < filmData.docs.length; i++) {
         if('poster' in filmData.docs[i]) {
           this.posters[i] = filmData.docs[i].poster.url
