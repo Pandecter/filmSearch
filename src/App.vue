@@ -2,6 +2,17 @@
   <router-view />
 </template>
 
-<script setup>
-  //
+<script>
+   import { useFilmStore } from '@/store/filmStorage'
+
+   export default {
+    data() {
+      return {
+        FilmStore: useFilmStore()
+      }
+    },
+    mounted() {
+      this.FilmStore.moveToPosters();
+    }
+  }
 </script>
