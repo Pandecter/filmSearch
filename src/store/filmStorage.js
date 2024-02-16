@@ -17,7 +17,7 @@ export const useFilmStore = defineStore('filmStorage', {
     },
     moveToNames(){
       for(let i = 0; i < filmData.docs.length; i++) {
-        this.filmNames[i] = filmData.docs[i].name
+        this.filmNames[i] = filmData.docs[i].name;
       }
     }
   }

@@ -1,18 +1,16 @@
 <template>
     <v-app>
-        <v-container>
-            <v-row>
-                <v-col>
-                    <v-autocomplete
-                     label="Поиск"
-                     variant="outlined"
-                     :items="FilmStore.filmNames">
-                    </v-autocomplete>
-                </v-col>
-                <v-col>
-                    <p>тут будет кнопка сорт</p>
-                </v-col>
-            </v-row>
+        <v-container class="d-flex justify-center mt-16">
+            <div class="w-50">  
+                <v-autocomplete     
+                 width="100"    
+                 label="Поиск"
+                 variant="outlined"
+                 :items="FilmStore.filmNames"
+                >
+                </v-autocomplete>
+            </div>
+            <v-icon icon="mdi-sort-variant" size="x-large" class="ml-10 mt-2"></v-icon>
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>
