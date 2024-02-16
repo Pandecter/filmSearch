@@ -5,7 +5,8 @@
                 <v-col>
                     <v-autocomplete
                      label="Поиск"
-                     variant="outlined">
+                     variant="outlined"
+                     :items="FilmStore.filmNames">
                     </v-autocomplete>
                 </v-col>
                 <v-col>
@@ -13,9 +14,9 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-container class="d-flex flex-row flex-wrap justify-space-around align-content-space-evenly align-center"
+        <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>
-            <v-card v-for="(filmData, index) in FilmStore.filmDataStorage"
+            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.filmDataStorage"
              :key="filmData.id"
              max-width="300"
              height="300"
@@ -24,8 +25,17 @@
                 <v-card-item>
                     <v-card-title> {{ filmData.name }} </v-card-title>
                 </v-card-item>
-                <v-card-text>
-                    {{ filmData.year }} {{ filmData.rating.kp  }}
+                <v-card-text class="d-flex justify-space-between">
+                    <p>
+                        {{ filmData.year }}
+                    </p>
+                    <p>
+                        
+                        {{ filmData.rating.kp  }}
+                        <v-icon  icon="mdi-star" class="pb-1">
+                        </v-icon>
+                    </p>
+                     
                 </v-card-text>
                 <v-img
                  :min-width="300"
