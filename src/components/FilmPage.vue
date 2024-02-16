@@ -13,16 +13,25 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-container class="d-flex flex-row flex-wrap justify-space-around ">
-            <v-card v-for="(poster, index) in FilmStore.posters"
-             :key="index"
+        <v-container class="d-flex flex-row flex-wrap justify-space-around align-content-space-evenly align-center"
+        fill-height>
+            <v-card v-for="(filmData, index) in FilmStore.filmDataStorage"
+             :key="filmData.id"
              max-width="300"
              height="300"
-             >
+             variant="outlined"
+             >  
+                <v-card-item>
+                    <v-card-title> {{ filmData.name }} </v-card-title>
+                </v-card-item>
+                <v-card-text>
+                    {{ filmData.year }} {{ filmData.rating.kp  }}
+                </v-card-text>
                 <v-img
                  :min-width="300"
                  aspect-ratio="16/9"
-                 :src="poster">
+                 cover
+                 :src="filmData.poster.url">
                 </v-img>
             </v-card>
         </v-container>
