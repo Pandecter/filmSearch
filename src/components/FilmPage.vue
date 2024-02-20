@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-container class="d-flex justify-center mt-16">
-            <div class="w-50">  
+            <div class="ml-16 w-50">  
                 <v-autocomplete    
                  width="100"    
                  label="Поиск"
@@ -11,9 +11,8 @@
                  @update:modelValue="FilmStore.filmResult()"
                 >
                 </v-autocomplete>
-                <p> Cлово: {{ FilmStore.curName }}</p>
             </div>
-            <v-icon icon="mdi-sort-variant" size="x-large" class="ml-10 mt-2"></v-icon>
+            <v-btn icon="mdi-arrow-bottom-right-bold-box-outline" size="large" class="ml-6" elevation="0"></v-btn>
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>

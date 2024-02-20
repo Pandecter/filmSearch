@@ -26,11 +26,9 @@ export const useFilmStore = defineStore('filmStorage', {
     },
     filmResult() {
       if(this.curName == null) {
-        console.log("IS NULL")
         this.selectedFilms = [...this.filmDataStorage];
       }
       else {
-        console.log("else init")
         this.selectedFilms.length = 0;
         for(let i = 0; i < this.filmDataStorage.length; i++){
           if(this.filmDataStorage[i].name == this.curName) {
@@ -45,9 +43,5 @@ export const useFilmStore = defineStore('filmStorage', {
     updatePage() {
 
     },
-    alertFunc() {
-      alert("ААА")
-    }
-
   }
 })
