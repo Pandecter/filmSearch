@@ -63,7 +63,4 @@ export default {
     *{  
         background-color: rgb(90, 90, 90) !important; 
     }
-
-    .filmList{
-    }
 </style>
