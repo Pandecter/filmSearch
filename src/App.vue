@@ -12,8 +12,7 @@
       }
     },
     mounted() { // при монтировании экземпляра загружаем файлы с json
-      this.FilmStore.moveToStorage();
-      this.FilmStore.moveToNames();
+      this.FilmStore.moveToStorageArrays();
     }
   }
 </script>

@@ -6,19 +6,48 @@ export const useFilmStore = defineStore('filmStorage', {
   state: () => {
     return {
       filmDataStorage: [],
-      filmNames: []
+      filmNames: [],
+      selectedFilms: [],
+      paginationLength: 0,
+      countOfFilmsOnPage: 25,
+      currentPage: 1,
+      curName: null
     }
   },
   actions : {
-    moveToStorage(){
+    moveToStorageArrays() {
       for(let i = 0; i < filmData.docs.length; i++) {
         this.filmDataStorage[i] = filmData.docs[i];
-      }
-    },
-    moveToNames(){
-      for(let i = 0; i < filmData.docs.length; i++) {
         this.filmNames[i] = filmData.docs[i].name;
+        this.selectedFilms[i] = filmData.docs[i];
       }
+      this.paginationLength = Math.ceil(this.filmNames.length / this.countOfFilmsOnPage);
+    
+    },
+    filmResult() {
+      if(this.curName == null) {
+        console.log("IS NULL")
+        this.selectedFilms = [...this.filmDataStorage];
+      }
+      else {
+        console.log("else init")
+        this.selectedFilms.length = 0;
+        for(let i = 0; i < this.filmDataStorage.length; i++){
+          if(this.filmDataStorage[i].name == this.curName) {
+            console.log(this.curName + "/" +  this.filmDataStorage[i].name)
+            this.selectedFilms.push(this.filmDataStorage[i]);
+            break;
+          }
+        }
+      }
+
+    },
+    updatePage() {
+
+    },
+    alertFunc() {
+      alert("ААА")
     }
+
   }
 })

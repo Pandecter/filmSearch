@@ -2,19 +2,22 @@
     <v-app>
         <v-container class="d-flex justify-center mt-16">
             <div class="w-50">  
-                <v-autocomplete     
+                <v-autocomplete    
                  width="100"    
                  label="Поиск"
                  variant="outlined"
+                 v-model="FilmStore.curName"
                  :items="FilmStore.filmNames"
+                 @update:modelValue="FilmStore.filmResult()"
                 >
                 </v-autocomplete>
+                <p> Cлово: {{ FilmStore.curName }}</p>
             </div>
             <v-icon icon="mdi-sort-variant" size="x-large" class="ml-10 mt-2"></v-icon>
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>
-            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.filmDataStorage"
+            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.selectedFilms"
              :key="filmData.id"
              max-width="300"
              height="300"
@@ -43,6 +46,9 @@
                 </v-img>
             </v-card>
         </v-container>
+        <v-pagination :length="FilmStore.paginationLength">
+
+        </v-pagination>
     </v-app>
 </template>
 
@@ -54,6 +60,9 @@ export default {
         return {
             FilmStore: useFilmStore()
         }
+    },
+    watch: {
+
     }
     
 }
