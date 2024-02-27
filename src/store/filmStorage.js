@@ -11,7 +11,11 @@ export const useFilmStore = defineStore('filmStorage', {
       paginationLength: 0,
       countOfFilmsOnPage: 25,
       currentPage: 1,
-      curName: null
+      curName: null,
+      valuesOfSort: [{ type: 'По году', id: 0},
+                     { type: 'По рейтингу', id: 1},
+                     { type: 'По хронометражу', id: 2}
+      ]
     }
   },
   actions : {
@@ -32,13 +36,31 @@ export const useFilmStore = defineStore('filmStorage', {
         this.selectedFilms.length = 0;
         for(let i = 0; i < this.filmDataStorage.length; i++){
           if(this.filmDataStorage[i].name == this.curName) {
-            console.log(this.curName + "/" +  this.filmDataStorage[i].name)
             this.selectedFilms.push(this.filmDataStorage[i]);
             break;
           }
         }
       }
+    },
+    ascendingSort(choice) {
+      switch(choice) {
+        case 0:
+          alert("по году");
+          break;
+        case 1:
+          alert("по рейтингу");
+          break;
+        case 2:
+          alert("по хроно");
+          break;
+      }
+      // for(let i = 0; i + 1 < this.selectedFilms.length; ++i) {
+      //   for(let j = 0; j + 1 < this.selectedFilms.length - i; ++j) {
+      //     if(this.selectedFilms[j + 1].year < this.selectedFilms[j].year) {
 
+      //     }
+      //   }
+      // }
     },
     updatePage() {
 

@@ -12,7 +12,33 @@
                 >
                 </v-autocomplete>
             </div>
-            <v-btn icon="mdi-arrow-bottom-right-bold-box-outline" size="large" class="ml-6" elevation="0"></v-btn>
+                <v-btn class="ml-6 mt-1" size="large"  elevation="0" title="Сортировать фильмы">
+                    <v-icon icon="mdi-sort">
+                    </v-icon>
+                    <v-menu activator="parent"
+                    location="bottom" 
+                    :close-on-content-click="false">
+                        <v-list>
+                            <v-list-item v-for="item in FilmStore.valuesOfSort"
+                            :key="item.id">
+                                <v-list-item-title>
+                                    <div>
+                                        {{ item.type }}
+                                    </div>
+                                    <div>
+                                        <v-btn title="По возрастанию" class="ml-3">
+                                            <v-icon icon="mdi-sort-ascending"></v-icon>
+                                        </v-btn>
+                                        <v-btn title="По убыванию" class="ml-3">
+                                            <v-icon icon="mdi-sort-descending"></v-icon>
+                                        </v-btn>
+                                    </div>
+                                    
+                                </v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </v-btn>
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>
@@ -60,10 +86,6 @@ export default {
             FilmStore: useFilmStore()
         }
     },
-    watch: {
-
-    }
-    
 }
 </script>
 
