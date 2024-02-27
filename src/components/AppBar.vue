@@ -1,18 +1,27 @@
 <template>
   <v-app>
-    <v-app-bar app color="rgb(60, 60, 60)" style="border-bottom: 0.5px solid white;">
+    <v-app-bar app >
       <div class="w-100 d-flex justify-center">
         <p class="pr-2 text-h5">Поиск Кино</p>
         <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"></v-icon>
       </div>
+      <v-btn @click="toggleTheme" v-model="darkMode">
+        <v-icon icon="mdi-invert-colors"></v-icon>
+      </v-btn>
     </v-app-bar>
   </v-app>
 </template>
 
 <script setup>
-  //padding-right: 50px;
-  //padding-left: 65px;
-  //font-size: 30px !important;
+  import { ref } from "vue";
+  import { useTheme } from 'vuetify/lib/framework.mjs';
+
+  const theme = useTheme();
+  const darkMode = ref(false);
+
+  const toggleTheme = () => {
+    theme.global.name.value = darkMode.value ? "dark" : "light";
+  }
 </script>
 
 <style scoped lang="scss">

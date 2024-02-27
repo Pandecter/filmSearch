@@ -27,10 +27,10 @@
                                         {{ item.type }}
                                     </div>
                                     <div>
-                                        <v-btn title="По возрастанию" class="ml-3" @click="FilmStore.ascendingSort(item.id)">
+                                        <v-btn title="По возрастанию" class="ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)">
                                             <v-icon icon="mdi-sort-ascending"></v-icon>
                                         </v-btn>
-                                        <v-btn title="По убыванию" class="ml-3" @click="FilmStore.descendingSort(item.id)">
+                                        <v-btn title="По убыванию" class="ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)">
                                             <v-icon icon="mdi-sort-descending"></v-icon>
                                         </v-btn>
                                     </div>
@@ -91,5 +91,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
- 
+
 </style>
