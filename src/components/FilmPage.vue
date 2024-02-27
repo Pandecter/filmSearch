@@ -12,10 +12,11 @@
                 >
                 </v-autocomplete>
             </div>
-                <v-btn class="ml-6 mt-1" size="large"  elevation="0" title="Сортировать фильмы">
+                <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Сортировать фильмы"
+                id="sort-activator">
                     <v-icon icon="mdi-sort">
                     </v-icon>
-                    <v-menu activator="parent"
+                    <v-menu activator="#sort-activator"
                     location="bottom" 
                     :close-on-content-click="false">
                         <v-list>
@@ -26,17 +27,17 @@
                                         {{ item.type }}
                                     </div>
                                     <div>
-                                        <v-btn title="По возрастанию" class="ml-3">
+                                        <v-btn title="По возрастанию" class="ml-3" @click="FilmStore.ascendingSort(item.id)">
                                             <v-icon icon="mdi-sort-ascending"></v-icon>
                                         </v-btn>
-                                        <v-btn title="По убыванию" class="ml-3">
+                                        <v-btn title="По убыванию" class="ml-3" @click="FilmStore.descendingSort(item.id)">
                                             <v-icon icon="mdi-sort-descending"></v-icon>
                                         </v-btn>
                                     </div>
-                                    
                                 </v-list-item-title>
                             </v-list-item>
                         </v-list>
+                        <v-btn color="#df0f0f" @click="FilmStore.restartSort()">Сбросить</v-btn>
                     </v-menu>
                 </v-btn>
         </v-container>
@@ -90,7 +91,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    *{  
-        background-color: rgb(90, 90, 90) !important; 
-    }
+ 
 </style>

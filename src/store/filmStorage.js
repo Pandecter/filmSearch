@@ -43,25 +43,55 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
     ascendingSort(choice) {
-      switch(choice) {
-        case 0:
-          alert("по году");
-          break;
-        case 1:
-          alert("по рейтингу");
-          break;
-        case 2:
-          alert("по хроно");
-          break;
+      let temp;
+      for(let i = 0; i + 1 < this.selectedFilms.length; ++i) {
+        for(let j = 0; j + 1 < this.selectedFilms.length - i; ++j) {
+          if((choice == 0) && (this.selectedFilms[j + 1].year < this.selectedFilms[j].year)) {
+            temp = this.selectedFilms[j + 1];
+            this.selectedFilms[j + 1] = this.selectedFilms[j];
+            this.selectedFilms[j] = temp;
+          }
+          if((choice == 1) && (this.selectedFilms[j + 1].rating.kp < this.selectedFilms[j].rating.kp)) {
+            temp = this.selectedFilms[j + 1];
+            this.selectedFilms[j + 1] = this.selectedFilms[j];
+            this.selectedFilms[j] = temp;
+          }
+          if((choice == 2) && (this.selectedFilms[j + 1].movieLength < this.selectedFilms[j].movieLength)) {
+            temp = this.selectedFilms[j + 1];
+            this.selectedFilms[j + 1] = this.selectedFilms[j]
+            this.selectedFilms[j]= temp;
+          }
+        }
       }
-      // for(let i = 0; i + 1 < this.selectedFilms.length; ++i) {
-      //   for(let j = 0; j + 1 < this.selectedFilms.length - i; ++j) {
-      //     if(this.selectedFilms[j + 1].year < this.selectedFilms[j].year) {
-
-      //     }
-      //   }
-      // }
     },
+
+    descendingSort(choice) {
+      let temp;
+      for(let i = 0; i + 1 < this.selectedFilms.length; ++i) {
+        for(let j = 0; j + 1 < this.selectedFilms.length - i; ++j) {
+          if((choice == 0) && (this.selectedFilms[j].year < this.selectedFilms[j + 1].year)) {
+            temp = this.selectedFilms[j];
+            this.selectedFilms[j] = this.selectedFilms[j + 1];
+            this.selectedFilms[j + 1] = temp;
+          }
+          if((choice == 1) && (this.selectedFilms[j].rating.kp < this.selectedFilms[j + 1].rating.kp)) {
+            temp = this.selectedFilms[j];
+            this.selectedFilms[j] = this.selectedFilms[j + 1];
+            this.selectedFilms[j + 1] = temp;
+          }
+          if((choice == 2) && (this.selectedFilms[j].movieLength < this.selectedFilms[j + 1].movieLength)) {
+            temp = this.selectedFilms[j];
+            this.selectedFilms[j] = this.selectedFilms[j + 1]
+            this.selectedFilms[j + 1]= temp;
+          }
+        }
+      }
+    },
+
+    restartSort() {
+      this.selectedFilms = [...this.filmDataStorage];
+    },
+
     updatePage() {
 
     },
