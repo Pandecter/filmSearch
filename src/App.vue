@@ -13,6 +13,10 @@
     },
     mounted() { // при монтировании экземпляра загружаем файлы с json
       this.FilmStore.moveToStorageArrays();
-    }
+    },
+    // updated() {
+    //   console.log("updated");
+    //   //this.FilmStore.updateFunc();
+    // }
   }
 </script>

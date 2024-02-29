@@ -13,7 +13,9 @@
                 </v-autocomplete>
             </div>
                 <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Сортировать фильмы"
-                id="sort-activator">
+                 id="sort-activator"
+                 variant="outlined"
+                >
                     <v-icon icon="mdi-sort">
                     </v-icon>
                     <v-menu activator="#sort-activator"
@@ -27,10 +29,14 @@
                                         {{ item.type }}
                                     </div>
                                     <div>
-                                        <v-btn title="По возрастанию" class="ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)">
+                                        <v-btn title="По возрастанию" class="mt-1 ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)"
+                                         variant="outlined"
+                                        >
                                             <v-icon icon="mdi-sort-ascending"></v-icon>
                                         </v-btn>
-                                        <v-btn title="По убыванию" class="ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)">
+                                        <v-btn title="По убыванию" class="mt-1 ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)"
+                                         variant="outlined"
+                                        >
                                             <v-icon icon="mdi-sort-descending"></v-icon>
                                         </v-btn>
                                     </div>
@@ -43,7 +49,7 @@
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>
-            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.selectedFilms"
+            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.showResultArray"
              :key="filmData.id"
              max-width="300"
              height="300"
@@ -57,7 +63,6 @@
                         {{ filmData.year }}
                     </p>
                     <p>
-                        
                         {{ filmData.rating.kp  }}
                         <v-icon  icon="mdi-star" class="pb-1">
                         </v-icon>
@@ -72,8 +77,10 @@
                 </v-img>
             </v-card>
         </v-container>
-        <v-pagination :length="FilmStore.paginationLength">
-
+        <v-pagination :length="FilmStore.paginationLength"
+         v-model="FilmStore.currentPage"
+         @update:modelValue="FilmStore.updatePage()"
+        >
         </v-pagination>
     </v-app>
 </template>

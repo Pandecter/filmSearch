@@ -15,7 +15,9 @@ export const useFilmStore = defineStore('filmStorage', {
       valuesOfSort: [{ type: 'По году', id: 0},
                      { type: 'По рейтингу', id: 1},
                      { type: 'По хронометражу', id: 2}
-      ]
+      ],
+      start: 0,
+      end: 0
     }
   },
   actions : {
@@ -26,7 +28,9 @@ export const useFilmStore = defineStore('filmStorage', {
         this.selectedFilms[i] = filmData.docs[i];
       }
       this.paginationLength = Math.ceil(this.filmNames.length / this.countOfFilmsOnPage);
-    
+      this.end = this.countOfFilmsOnPage;
+      this.updatePage();
+
     },
     filmResult() {
       if(this.curName == null) {
@@ -65,6 +69,11 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
+    // someSort(field) {
+    //   let result = this.selectedFilms;
+    //   return result.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
+    // }
+
     descendingSort(choice) {
       let temp;
       for(let i = 0; i + 1 < this.selectedFilms.length; ++i) {
@@ -93,7 +102,13 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     updatePage() {
-
+      this.start = this.countOfFilmsOnPage * (this.currentPage - 1);
+      this.end = (this.countOfFilmsOnPage * this.currentPage);
     },
+  },
+  getters: {
+    showResultArray() {
+      return this.selectedFilms.slice(this.start, this.end);
+    }
   }
 })
