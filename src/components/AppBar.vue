@@ -2,10 +2,10 @@
   <v-app>
     <v-app-bar app >
       <div class="w-100 d-flex justify-center">
-        <p class="pr-2 text-h5">Поиск Кино</p>
+        <p class="ml-16 pr-2 text-h5">Поиск Кино</p>
         <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"></v-icon>
       </div>
-      <v-btn @click="toggleTheme" v-model="darkMode">
+      <v-btn @click="toggleTheme">
         <v-icon icon="mdi-invert-colors"></v-icon>
       </v-btn>
     </v-app-bar>
@@ -20,6 +20,7 @@
   const darkMode = ref(false);
 
   const toggleTheme = () => {
+    darkMode.value = !darkMode.value;
     theme.global.name.value = darkMode.value ? "dark" : "light";
   }
 </script>
