@@ -19,105 +19,80 @@ export const useFilmStore = defineStore('filmStorage', {
       start: 0,
       end: 0,
       arrOfFields : ["year", "rating", "movieLength"],
-      //arr2 : [],
+      stepValue: [1, 0.1, 1],
+      valuesOfRange: [],
       borderValuesOfFilters: []  
     }
   },
   actions : {
-    // compareFunc(fieldName) {
-    //   this.arr2.push(Math)
-    // },
     moveToStorageArrays() {
       let arrOfYears = [];
       let arrOfRating = [];
       let arrOfLength = [];
-      //let arr = [];
+      let arr = [];
       for(let i = 0; i < filmData.docs.length; i++) {
         this.filmDataStorage[i] = filmData.docs[i];
         this.filmNames[i] = filmData.docs[i].name;
         this.selectedFilms[i] = filmData.docs[i];
+        this.selectedFilms[i].rating.kp =  this.selectedFilms[i].rating.kp.toFixed(1);
         arrOfYears[i] = filmData.docs[i].year;
         arrOfRating[i] = filmData.docs[i].rating.kp;
         arrOfLength[i] = filmData.docs[i].movieLength;
       }
 
-      // for(let i = 0; i < this.arr.length; i++){
-      //   this.compareFunc(arr[i]);
-      // }
+      // const min = 2024;
+      // const max = 0;
 
-      // arr.push(Math.max.apply(Math, arrOfYears));
-      // arr.push(Math.min.apply(Math, arrOfYears));
-      // this.borderValuesOfFilters.push(arr);
-      // arr.length = 0;
-      
-      // arr.push(Math.max.apply(Math, arrOfRating));
-      // arr.push(Math.min.apply(Math, arrOfRating));
-      // this.borderValuesOfFilters.push(arr);
-      // arr.length = 0;
+      // this.borderValuesOfFilters.forEach(element => {
+        
+      // });
 
-      // arr.push(Math.max.apply(Math, arrOfLength));
-      // arr.push(Math.min.apply(Math, arrOfLength));
-      // this.borderValuesOfFilters.push(arr);
-      // arr.length = 0;
+      this.borderValuesOfFilters.push(arr.slice());
+      this.borderValuesOfFilters[0][0] = Math.min.apply(Math, arrOfYears);
+      this.borderValuesOfFilters[0][1] = Math.max.apply(Math, arrOfYears);
 
-     
+      this.borderValuesOfFilters.push(arr.slice());
+      this.borderValuesOfFilters[1][0] = Math.min.apply(Math, arrOfRating);
+      this.borderValuesOfFilters[1][1] = Math.max.apply(Math, arrOfRating);
+
+      this.borderValuesOfFilters.push(arr.slice());
+      this.borderValuesOfFilters[2][0] = Math.min.apply(Math, arrOfLength);
+      this.borderValuesOfFilters[2][1] = Math.max.apply(Math, arrOfLength);
 
 
-      // this.arr[0] = Math.max.apply(Math, arrOfRating);
-      // this.arr[1] = Math.min.apply(Math, arrOfRating);
-      // this.borderValuesOfFilters.push(arr);
-
-      // this.arr[0] = Math.max.apply(Math, arrOfLength);
-      // this.arr[1] = Math.min.apply(Math, arrOfLength);
-      // this.borderValuesOfFilters.push(arr);
-
-      // this.maxValues[0] = Math.max.apply(Math, arrOfYears);
-      // this.maxValues[1] = Math.max.apply(Math, arrOfRating);
-      // this.maxValues[2] = Math.max.apply(Math, arrOfLength);
-
-      // this.minValues[0] = Math.min.apply(Math, arrOfYears);
-      // this.minValues[1] = Math.min.apply(Math, arrOfRating);
-      // this.minValues[2] = Math.min.apply(Math, arrOfLength);
-
-      // for(let i = 1; i < this.selectedFilms.length; i++) {
-      //   if(this.selectedFilms[i].year >=  this.selectedFilms[i - 1].year) {
-      //     this.maxValues[0] = this.selectedFilms[i].year;
+      this.valuesOfRange = [...this.borderValuesOfFilters]
+      // let tempLowRating = this.borderValuesOfFilters[1][0].toFixed(1) * 10 - 1; //преобразуем число в альтернативный вид для большего шага
+      // let tempHighRating = this.borderValuesOfFilters[1][1].toFixed(1) * 10 + 1; //прибавляем и вычитаем единицу для охвата всех фильмов
+      // for(let i = 0; i < this.arrOfFields.length; i++){
+      //   this.valuesOfRange.push(arr.slice());
+      //   for(let currentYear = this.borderValuesOfFilters[i][0]; currentYear <= this.borderValuesOfFilters[i][1]; currentYear++) {
+      //     this.valuesOfRange.push(currentYear);
       //   }
-      //   if(this.selectedFilms[i].rating.kp >=  this.selectedFilms[i - 1].rating.kp) {
-      //     this.maxValues[1] = this.selectedFilms[i].rating.kp;
+      //   for(let currentRating = tempLowRating; currentRating <= tempHighRating; currentRating++) {
+      //     let tempVal = currentRating / 10;
+      //     this.valuesOfRange[i] = tempVal;
       //   }
-      //   if(this.selectedFilms[i].movieLength >=  this.selectedFilms[i - 1].movieLength) {
-      //     this.maxValues[2] = this.selectedFilms[i].movieLength;
-      //   }
-
-      //   if(this.selectedFilms[i].year <=  this.selectedFilms[i - 1].year) {
-      //     this.minValues[0] = this.selectedFilms[i].year;
-      //   }
-      //   if(this.selectedFilms[i].rating.kp <=  this.selectedFilms[i - 1].rating.kp) {
-      //     this.minValues[1] = this.selectedFilms[i].rating.kp;
-      //   }
-      //   if(this.selectedFilms[i].movieLength <=  this.selectedFilms[i - 1].movieLength) {
-      //     this.minValues[2] = this.selectedFilms[i].movieLength;
+      //   for(let currentLength = this.borderValuesOfFilters[i][0]; currentLength <= this.borderValuesOfFilters[i][1]; currentLength++) {
+      //     this.valuesOfRange[i] = currentLength;
       //   }
       // }
 
-      this.paginationLength = Math.ceil(this.filmNames.length / this.countOfFilmsOnPage);
+      //this.paginationLength = Math.ceil(this.selectedFilms.length / this.countOfFilmsOnPage);
       this.end = this.countOfFilmsOnPage;
       this.updatePage();
-
-      //console.log(this.selectedFilms.year);
-
     },
   
     filmResult() {
       if(this.curName == null) {
         this.selectedFilms = [...this.filmDataStorage];
+        this.updatePage();
       }
       else {
         this.selectedFilms.length = 0;
         for(let i = 0; i < this.filmDataStorage.length; i++){
           if(this.filmDataStorage[i].name == this.curName) {
             this.selectedFilms.push(this.filmDataStorage[i]);
+            this.updatePage();
             break;
           }
         }
@@ -127,7 +102,7 @@ export const useFilmStore = defineStore('filmStorage', {
     ascendingSort(choice) {
       let field = this.arrOfFields[choice];
       let result = this.selectedFilms;
-      if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет
+      if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
         return result.sort((a,b) => (a[field].kp > b[field].kp) ? 1 : ((b[field].kp > a[field].kp) ? -1 : 0))
       }
       return result.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
@@ -136,7 +111,7 @@ export const useFilmStore = defineStore('filmStorage', {
     descendingSort(choice) {
       let field = this.arrOfFields[choice];
       let result = this.selectedFilms;
-      if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет
+      if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
         return result.sort((a,b) => (a[field].kp > b[field].kp) ? -1 : ((b[field].kp > a[field].kp) ? 1 : 0))
       }
       return result.sort((a,b) => (a[field] > b[field]) ? -1 : ((b[field] > a[field]) ? 1 : 0))
@@ -147,13 +122,16 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     updatePage() {
+      this.paginationLength = Math.ceil(this.selectedFilms.length / this.countOfFilmsOnPage);
       this.start = this.countOfFilmsOnPage * (this.currentPage - 1);
       this.end = (this.countOfFilmsOnPage * this.currentPage);
     },
+
+    
   },
   getters: {
     showResultArray() {
       return this.selectedFilms.slice(this.start, this.end);
-    }
+    },
   }
 })

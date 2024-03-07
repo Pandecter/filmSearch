@@ -21,29 +21,31 @@
                     <v-menu activator="#sort-activator"
                     location="bottom" 
                     :close-on-content-click="false">
-                        <v-list>
-                            <v-list-item v-for="item in FilmStore.valuesOfSort"
-                            :key="item.id">
-                                <v-list-item-title>
-                                    <div>
-                                        {{ item.type }}
-                                    </div>
-                                    <div>
-                                        <v-btn title="По возрастанию" class="mt-1 ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)"
-                                         variant="outlined"
-                                        >
-                                            <v-icon icon="mdi-sort-ascending"></v-icon>
-                                        </v-btn>
-                                        <v-btn title="По убыванию" class="mt-1 ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)"
-                                         variant="outlined"
-                                        >
-                                            <v-icon icon="mdi-sort-descending"></v-icon>
-                                        </v-btn>
-                                    </div>
-                                </v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                        <v-btn color="#df0f0f" @click="FilmStore.restartSort()">Сбросить</v-btn>
+                        <v-sheet>
+                            <v-list>
+                                <v-list-item v-for="item in FilmStore.valuesOfSort"
+                                 :key="item.id">
+                                    <v-list-item-title>
+                                        <div>
+                                            {{ item.type }}
+                                        </div>
+                                        <div>
+                                            <v-btn title="По возрастанию" class="mt-1 ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)"
+                                             variant="outlined"
+                                            >
+                                                <v-icon icon="mdi-sort-ascending"></v-icon>
+                                            </v-btn>
+                                            <v-btn title="По убыванию" class="mt-1 ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)"
+                                             variant="outlined"
+                                            >
+                                                <v-icon icon="mdi-sort-descending"></v-icon>
+                                            </v-btn>
+                                        </div>
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                            <v-btn rounded="0" class="w-100" color="error" @click="FilmStore.restartSort()">Сбросить</v-btn>
+                        </v-sheet>
                     </v-menu>
                 </v-btn>
                 <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Фильтровать фильмы"
@@ -55,23 +57,33 @@
                     <v-menu activator="#filter-activator"
                     location="bottom" 
                     :close-on-content-click="false">
-                        <v-list>
-                            <v-list-item v-for="(item, index) in FilmStore.valuesOfSort"
-                            :key="item.id">
-                                <v-list-item-title>
-                                    <div>
-                                        {{ item.type }}
-                                    </div>
-                                    <div>
-                                      <v-range-slider class="ml-5 mr-5 mt-7"
-                                       style="width: 200px"
-                                      
-                                      ></v-range-slider>
-                                    </div>
-                                </v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                        <v-btn color="#df0f0f" @click="FilmStore.restartSort()">Сбросить</v-btn>
+                        <v-sheet>
+                            <v-list>
+                                <v-list-item v-for="(item, index) in FilmStore.valuesOfSort"
+                                 :key="item.id">
+                                    <v-list-item-title>
+                                        <div>
+                                            {{ item.type }}
+                                        </div>
+                                        <div>
+                                            <v-range-slider class="ml-5 mr-5 mt-7"
+                                             style="width: 200px"
+                                             :min="FilmStore.borderValuesOfFilters[index][0]"
+                                             :max="FilmStore.borderValuesOfFilters[index][1]"
+                                             thumb-label="always"
+                                             v-model="FilmStore.valuesOfRange[index]"
+                                             :step="FilmStore.stepValue[index]"
+                                            >
+                                            </v-range-slider>
+                                        </div>
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                            <div>
+                                <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartSort()">Сбросить</v-btn>
+                                <v-btn rounded="0" class="w-50" variant="elevated" color="accept">Применить</v-btn>
+                            </div>
+                        </v-sheet> 
                     </v-menu>
                 </v-btn>
         </v-container>
@@ -91,7 +103,7 @@
                         {{ filmData.year }}
                     </p>
                     <p>
-                        {{ filmData.rating.kp  }}
+                        {{ filmData.rating.kp }}
                         <v-icon  icon="mdi-star" class="pb-1">
                         </v-icon>
                     </p>
