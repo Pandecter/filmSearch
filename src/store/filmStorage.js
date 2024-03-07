@@ -22,7 +22,7 @@ export const useFilmStore = defineStore('filmStorage', {
       stepValue: [1, 0.1, 1],
       valuesOfRange: [],
       borderValuesOfFilters: [] ,
-      test: 0 
+      inSortMode: false 
     }
   },
   actions : {
@@ -33,8 +33,10 @@ export const useFilmStore = defineStore('filmStorage', {
       let arr = [];
       for(let i = 0; i < filmData.docs.length; i++) {
         this.filmDataStorage[i] = filmData.docs[i];
-        this.filmNames[i] = filmData.docs[i].name;
         this.selectedFilms[i] = filmData.docs[i];
+       
+        //this.filmNames[i] = filmData.docs[i].name;
+        
         this.selectedFilms[i].rating.kp =  this.selectedFilms[i].rating.kp.toFixed(1);
         arrOfYears[i] = filmData.docs[i].year;
         arrOfRating[i] = filmData.docs[i].rating.kp;
@@ -68,7 +70,7 @@ export const useFilmStore = defineStore('filmStorage', {
     },
   
     filmResult() {
-      if(this.curName == null) {
+      if(this.curName == null && this.inSortMode.false) {
         this.selectedFilms = [...this.filmDataStorage];
         this.updatePage();
       }
@@ -111,6 +113,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.valuesOfRange = [...this.borderValuesOfFilters];
       this.updatePage();
       this.currentPage = 1;
+      this.inSortMode = false;
     },
 
     updatePage() {
@@ -120,6 +123,7 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filterFunc(value) {
+      this.inSortMode = true;
       let yearCondition = (value.year >= this.valuesOfRange[0][0]) && (value.year <= this.valuesOfRange[0][1]);
       let ratingCondition = (value.rating.kp >= this.valuesOfRange[1][0]) && (value.rating.kp  <= this.valuesOfRange[1][1]);
       let lengthCondition = (value.movieLength >= this.valuesOfRange[2][0]) && (value.movieLength <= this.valuesOfRange[2][1]);
@@ -132,10 +136,11 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filterInit(){
+     
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
-      this.updatePage();
       this.currentPage = 1;
+      this.updatePage();
     }
 
   },
@@ -144,6 +149,11 @@ export const useFilmStore = defineStore('filmStorage', {
       return this.selectedFilms.slice(this.start, this.end);
     },
 
-    
+    filmNamesList() {
+      for (let i = 0; i < this.selectedFilms.length; i++){
+        this.filmNames[i] = this.selectedFilms[i].name;
+      }
+      return this.filmNames;
+    }
   }
 })

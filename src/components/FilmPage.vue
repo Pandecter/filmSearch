@@ -7,7 +7,7 @@
                  label="Поиск"
                  variant="outlined"
                  v-model="FilmStore.curName"
-                 :items="FilmStore.filmNames"
+                 :items="FilmStore.filmNamesList"
                  @update:modelValue="FilmStore.filmResult()"
                 >
                 </v-autocomplete>
