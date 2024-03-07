@@ -80,8 +80,8 @@
                                 </v-list-item>
                             </v-list>
                             <div>
-                                <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartSort()">Сбросить</v-btn>
-                                <v-btn rounded="0" class="w-50" variant="elevated" color="accept">Применить</v-btn>
+                                <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartFilter()">Сбросить</v-btn>
+                                <v-btn rounded="0" class="w-50" variant="elevated" color="accept" @click="FilmStore.filterInit()">Применить</v-btn>
                             </div>
                         </v-sheet> 
                     </v-menu>

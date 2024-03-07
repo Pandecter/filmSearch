@@ -21,7 +21,8 @@ export const useFilmStore = defineStore('filmStorage', {
       arrOfFields : ["year", "rating", "movieLength"],
       stepValue: [1, 0.1, 1],
       valuesOfRange: [],
-      borderValuesOfFilters: []  
+      borderValuesOfFilters: [] ,
+      test: 0 
     }
   },
   actions : {
@@ -61,23 +62,7 @@ export const useFilmStore = defineStore('filmStorage', {
 
 
       this.valuesOfRange = [...this.borderValuesOfFilters]
-      // let tempLowRating = this.borderValuesOfFilters[1][0].toFixed(1) * 10 - 1; //преобразуем число в альтернативный вид для большего шага
-      // let tempHighRating = this.borderValuesOfFilters[1][1].toFixed(1) * 10 + 1; //прибавляем и вычитаем единицу для охвата всех фильмов
-      // for(let i = 0; i < this.arrOfFields.length; i++){
-      //   this.valuesOfRange.push(arr.slice());
-      //   for(let currentYear = this.borderValuesOfFilters[i][0]; currentYear <= this.borderValuesOfFilters[i][1]; currentYear++) {
-      //     this.valuesOfRange.push(currentYear);
-      //   }
-      //   for(let currentRating = tempLowRating; currentRating <= tempHighRating; currentRating++) {
-      //     let tempVal = currentRating / 10;
-      //     this.valuesOfRange[i] = tempVal;
-      //   }
-      //   for(let currentLength = this.borderValuesOfFilters[i][0]; currentLength <= this.borderValuesOfFilters[i][1]; currentLength++) {
-      //     this.valuesOfRange[i] = currentLength;
-      //   }
-      // }
 
-      //this.paginationLength = Math.ceil(this.selectedFilms.length / this.countOfFilmsOnPage);
       this.end = this.countOfFilmsOnPage;
       this.updatePage();
     },
@@ -121,17 +106,44 @@ export const useFilmStore = defineStore('filmStorage', {
       this.selectedFilms = [...this.filmDataStorage];
     },
 
+    restartFilter() {
+      this.selectedFilms = [...this.filmDataStorage];
+      this.valuesOfRange = [...this.borderValuesOfFilters];
+      this.updatePage();
+      this.currentPage = 1;
+    },
+
     updatePage() {
       this.paginationLength = Math.ceil(this.selectedFilms.length / this.countOfFilmsOnPage);
       this.start = this.countOfFilmsOnPage * (this.currentPage - 1);
       this.end = (this.countOfFilmsOnPage * this.currentPage);
     },
 
-    
+    filterFunc(value) {
+      let yearCondition = (value.year >= this.valuesOfRange[0][0]) && (value.year <= this.valuesOfRange[0][1]);
+      let ratingCondition = (value.rating.kp >= this.valuesOfRange[1][0]) && (value.rating.kp  <= this.valuesOfRange[1][1]);
+      let lengthCondition = (value.movieLength >= this.valuesOfRange[2][0]) && (value.movieLength <= this.valuesOfRange[2][1]);
+      if (yearCondition && ratingCondition && lengthCondition) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    },
+
+    filterInit(){
+      this.selectedFilms = [...this.filmDataStorage];
+      this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
+      this.updatePage();
+      this.currentPage = 1;
+    }
+
   },
   getters: {
     showResultArray() {
       return this.selectedFilms.slice(this.start, this.end);
     },
+
+    
   }
 })
