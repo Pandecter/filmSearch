@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <v-container class="d-flex justify-center mt-16">
-            <div class="ml-16 w-50">  
+        <v-container class="d-flex justify-center mr-14 mt-16">
+            <div class="w-50">  
                 <v-autocomplete    
                  width="100"    
                  label="Поиск"
@@ -39,6 +39,34 @@
                                         >
                                             <v-icon icon="mdi-sort-descending"></v-icon>
                                         </v-btn>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                        <v-btn color="#df0f0f" @click="FilmStore.restartSort()">Сбросить</v-btn>
+                    </v-menu>
+                </v-btn>
+                <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Фильтровать фильмы"
+                 id="filter-activator"
+                 variant="outlined"
+                >
+                    <v-icon icon="mdi-filter">
+                    </v-icon>
+                    <v-menu activator="#filter-activator"
+                    location="bottom" 
+                    :close-on-content-click="false">
+                        <v-list>
+                            <v-list-item v-for="(item, index) in FilmStore.valuesOfSort"
+                            :key="item.id">
+                                <v-list-item-title>
+                                    <div>
+                                        {{ item.type }}
+                                    </div>
+                                    <div>
+                                      <v-range-slider class="ml-5 mr-5 mt-7"
+                                       style="width: 200px"
+                                      
+                                      ></v-range-slider>
                                     </div>
                                 </v-list-item-title>
                             </v-list-item>
