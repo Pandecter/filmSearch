@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <v-container class="d-flex justify-center mr-14 mt-16">
-            <div class="w-50">  
+        <v-container class="d-flex justify-center mr-14 mt-16" v-if="FilmStore.searchMode">
+                <div class="w-50">  
                 <v-autocomplete    
                  width="100"    
                  label="Поиск"
@@ -9,10 +9,10 @@
                  v-model="FilmStore.curName"
                  :items="FilmStore.filmNamesList"
                  @update:modelValue="FilmStore.filmResult()"
+                 
                 >
                 </v-autocomplete>
-                {{ FilmStore.inSortMode }}
-            </div>
+                </div>
                 <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Сортировать фильмы"
                  id="sort-activator"
                  variant="outlined"
@@ -87,6 +87,9 @@
                         </v-sheet> 
                     </v-menu>
                 </v-btn>
+        </v-container>
+        <v-container v-else class="d-flex justify-center mt-10">
+            <v-btn @click="FilmStore.backToSearch()"> Вернуться к поиску </v-btn>
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>

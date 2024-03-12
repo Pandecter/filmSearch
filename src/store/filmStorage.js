@@ -22,7 +22,8 @@ export const useFilmStore = defineStore('filmStorage', {
       stepValue: [1, 0.1, 1],
       valuesOfRange: [],
       borderValuesOfFilters: [] ,
-      inSortMode: false 
+      inFilterMode: false,
+      searchMode: true
     }
   },
   actions : {
@@ -70,28 +71,17 @@ export const useFilmStore = defineStore('filmStorage', {
     },
   
     filmResult() {
-      if(this.curName == null) {
-        if(this.inSortMode == true) {
-          this.filterInit();
-        }
-        else {
-          this.selectedFilms = [...this.filmDataStorage];
+      this.searchMode = false;
+      this.selectedFilms.length = 0;
+      for(let i = 0; i < this.filmDataStorage.length; i++){
+        if(this.filmDataStorage[i].name == this.curName) {
+          this.selectedFilms.push(this.filmDataStorage[i]);
+          this.currentPage = 1;
           this.updatePage();
+          break;
         }
       }
-      else {
-        this.selectedFilms.length = 0;
-        for(let i = 0; i < this.filmDataStorage.length; i++){
-          if(this.filmDataStorage[i].name == this.curName) {
-            this.selectedFilms.push(this.filmDataStorage[i]);
-            this.currentPage = 1;
-            this.updatePage();
-            break;
-          }
-        }
-        // this.updatePage();
-        
-      }
+      
     },
 
     ascendingSort(choice) {
@@ -121,7 +111,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.valuesOfRange = [...this.borderValuesOfFilters];
       this.updatePage();
       this.currentPage = 1;
-      this.inSortMode = false;
+      this.inFilterMode = false;
     },
 
     updatePage() {
@@ -146,18 +136,19 @@ export const useFilmStore = defineStore('filmStorage', {
                                 (value.movieLength <= this.valuesOfRange[2][1]);
 
       if(yearResetCondition && ratingResetCondition && lengthResetCondition) { //условие прекращения фильтрации
-        this.inSortMode = false;
+        this.inFilterMode = false;
       }
       else { // условие начала фильтрации (необходимо для корректной работы поиска)
-        this.inSortMode = true;
+        this.inFilterMode = true;
       }
 
-      if(yearTrueCondition && ratingTrueCondition && lengthTrueCondition) {
-        return true;
-      }
-      else {
-        return false;
-      }
+      return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
+      // if(yearTrueCondition && ratingTrueCondition && lengthTrueCondition) {
+      //   return true;
+      // }
+      // else {
+      //   return false;
+      // }
     },
 
     filterInit(){
@@ -165,6 +156,18 @@ export const useFilmStore = defineStore('filmStorage', {
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       this.currentPage = 1;
       this.updatePage();
+    },
+
+    backToSearch() {
+      this.curName = null;
+      if(this.inFilterMode == true) {
+        this.filterInit();
+      }
+      else {
+        this.selectedFilms = [...this.filmDataStorage];
+        this.updatePage();
+      }
+      this.searchMode = true;
     }
 
   },
