@@ -155,8 +155,9 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filmNamesList() {
+      this.filmNames.length = 0;
       for (let i = 0; i < this.selectedFilms.length; i++){
-        this.filmNames[i] = this.selectedFilms[i].name;
+        this.filmNames.push(this.selectedFilms[i].name);
       }
       return this.filmNames;
     }
