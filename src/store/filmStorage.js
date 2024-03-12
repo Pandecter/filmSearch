@@ -71,9 +71,13 @@ export const useFilmStore = defineStore('filmStorage', {
   
     filmResult() {
       if(this.curName == null) {
-        this.selectedFilms = [...this.filmDataStorage];
-        this.updatePage();
-        
+        if(this.inSortMode == true) {
+          this.filterInit();
+        }
+        else {
+          this.selectedFilms = [...this.filmDataStorage];
+          this.updatePage();
+        }
       }
       else {
         this.selectedFilms.length = 0;
@@ -127,13 +131,28 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filterFunc(value) {
-      //if()//условие сорта...
-      
-      this.inSortMode = true;
-      let yearCondition = (value.year >= this.valuesOfRange[0][0]) && (value.year <= this.valuesOfRange[0][1]);
-      let ratingCondition = (value.rating.kp >= this.valuesOfRange[1][0]) && (value.rating.kp  <= this.valuesOfRange[1][1]);
-      let lengthCondition = (value.movieLength >= this.valuesOfRange[2][0]) && (value.movieLength <= this.valuesOfRange[2][1]);
-      if (yearCondition && ratingCondition && lengthCondition) {
+      let yearResetCondition = (this.valuesOfRange[0][0] == this.borderValuesOfFilters[0][0]) &&
+                               (this.valuesOfRange[0][1] == this.borderValuesOfFilters[0][1]);
+      let ratingResetCondition = (this.valuesOfRange[1][0] == this.borderValuesOfFilters[1][0]) &&
+                                 (this.valuesOfRange[1][1]  == this.borderValuesOfFilters[1][1]);
+      let lengthResetCondition = (this.valuesOfRange[2][0] == this.borderValuesOfFilters[2][0]) && 
+                                 (this.valuesOfRange[2][1] == this.borderValuesOfFilters[2][1]);
+
+      let yearTrueCondition = (value.year >= this.valuesOfRange[0][0]) &&
+                              (value.year <= this.valuesOfRange[0][1]);
+      let ratingTrueCondition = (value.rating.kp >= this.valuesOfRange[1][0]) &&
+                                (value.rating.kp  <= this.valuesOfRange[1][1]);
+      let lengthTrueCondition = (value.movieLength >= this.valuesOfRange[2][0]) &&
+                                (value.movieLength <= this.valuesOfRange[2][1]);
+
+      if(yearResetCondition && ratingResetCondition && lengthResetCondition) { //условие прекращения фильтрации
+        this.inSortMode = false;
+      }
+      else { // условие начала фильтрации (необходимо для корректной работы поиска)
+        this.inSortMode = true;
+      }
+
+      if(yearTrueCondition && ratingTrueCondition && lengthTrueCondition) {
         return true;
       }
       else {
@@ -163,3 +182,9 @@ export const useFilmStore = defineStore('filmStorage', {
     }
   }
 })
+
+// на 12.03:
+// 1) Простое применение фильтрации без какой-либо *реальной* фильтрации сбрасывает сортировку.
+// 2) При удалении букв найденного фильма больше нет других вариантов, пока строка с именем фильма не будет полностью удалена.
+// 3) По удалению наименования фильма из строки сбрасывается сортировка
+// (4) Работает медленно

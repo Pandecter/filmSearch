@@ -11,6 +11,7 @@
                  @update:modelValue="FilmStore.filmResult()"
                 >
                 </v-autocomplete>
+                {{ FilmStore.inSortMode }}
             </div>
                 <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Сортировать фильмы"
                  id="sort-activator"
