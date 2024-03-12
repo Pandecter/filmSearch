@@ -25,7 +25,8 @@
                         <v-sheet>
                             <v-list>
                                 <v-list-item v-for="item in FilmStore.valuesOfSort"
-                                 :key="item.id">
+                                 :key="item.id"
+                                >
                                     <v-list-item-title>
                                         <div>
                                             {{ item.type }}
@@ -43,7 +44,7 @@
                                             </v-btn>
                                         </div>
                                     </v-list-item-title>
-                                </v-list-item>
+                                </v-list-item>    
                             </v-list>
                             <v-btn rounded="0" class="w-100" color="error" @click="FilmStore.restartSort()">Сбросить</v-btn>
                         </v-sheet>
@@ -96,15 +97,16 @@
             <v-card class="mt-10" v-for="(filmData, index) in FilmStore.showResultArray"
              :key="filmData.id"
              max-width="300"
-             height="300"
+             height="350"
              variant="outlined"
              >  
                 <v-card-item>
                     <v-card-title> {{ filmData.name }} </v-card-title>
+                    <v-card-subtitle> {{ filmData.year }} </v-card-subtitle>
                 </v-card-item>
                 <v-card-text class="d-flex justify-space-between">
                     <p>
-                        {{ filmData.year }}
+                        {{ filmData.movieLength }} мин
                     </p>
                     <p>
                         {{ filmData.rating.kp }}
@@ -115,7 +117,7 @@
                 </v-card-text>
                 <v-img
                  :min-width="300"
-                 aspect-ratio="16/9"
+                 aspect-ratio="0.66"
                  cover
                  :src="filmData.poster.url">
                 </v-img>

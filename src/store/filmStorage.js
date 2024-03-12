@@ -1,4 +1,3 @@
-// Utilities
 import { defineStore } from 'pinia'
 import filmData from '../../dataset/kinopoisk-1.json'
 
@@ -23,7 +22,8 @@ export const useFilmStore = defineStore('filmStorage', {
       valuesOfRange: [],
       borderValuesOfFilters: [] ,
       inFilterMode: false,
-      searchMode: true
+      searchMode: true,
+      sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию
     }
   },
   actions : {
@@ -35,9 +35,6 @@ export const useFilmStore = defineStore('filmStorage', {
       for(let i = 0; i < filmData.docs.length; i++) {
         this.filmDataStorage[i] = filmData.docs[i];
         this.selectedFilms[i] = filmData.docs[i];
-       
-        //this.filmNames[i] = filmData.docs[i].name;
-        
         this.selectedFilms[i].rating.kp =  this.selectedFilms[i].rating.kp.toFixed(1);
         arrOfYears[i] = filmData.docs[i].year;
         arrOfRating[i] = filmData.docs[i].rating.kp;
@@ -85,25 +82,31 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     ascendingSort(choice) {
+      this.sortChoice[0] = choice;
+      this.sortChoice[1] = null;  
       let field = this.arrOfFields[choice];
-      let result = this.selectedFilms;
+      //let result = this.selectedFilms;
       if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
-        return result.sort((a,b) => (a[field].kp > b[field].kp) ? 1 : ((b[field].kp > a[field].kp) ? -1 : 0))
+        this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? 1 : ((b[field].kp > a[field].kp) ? -1 : 0))
       }
-      return result.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
+      this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
     },
 
     descendingSort(choice) {
+      this.sortChoice[0] = null;
+      this.sortChoice[1] = choice;
       let field = this.arrOfFields[choice];
-      let result = this.selectedFilms;
+      //let result = this.selectedFilms;
       if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
-        return result.sort((a,b) => (a[field].kp > b[field].kp) ? -1 : ((b[field].kp > a[field].kp) ? 1 : 0))
+        this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? -1 : ((b[field].kp > a[field].kp) ? 1 : 0))
       }
-      return result.sort((a,b) => (a[field] > b[field]) ? -1 : ((b[field] > a[field]) ? 1 : 0))
+      this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? -1 : ((b[field] > a[field]) ? 1 : 0))
     },
 
     restartSort() {
       this.selectedFilms = [...this.filmDataStorage];
+      this.sortChoice[0] = null;
+      this.sortChoice[1] = null;
     },
 
     restartFilter() {
@@ -112,6 +115,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.updatePage();
       this.currentPage = 1;
       this.inFilterMode = false;
+      this.sortType(this.sortChoice);
     },
 
     updatePage() {
@@ -141,20 +145,14 @@ export const useFilmStore = defineStore('filmStorage', {
       else { // условие начала фильтрации (необходимо для корректной работы поиска)
         this.inFilterMode = true;
       }
-
       return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
-      // if(yearTrueCondition && ratingTrueCondition && lengthTrueCondition) {
-      //   return true;
-      // }
-      // else {
-      //   return false;
-      // }
     },
 
     filterInit(){
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       this.currentPage = 1;
+      this.sortType(this.sortChoice);
       this.updatePage();
     },
 
@@ -168,6 +166,16 @@ export const useFilmStore = defineStore('filmStorage', {
         this.updatePage();
       }
       this.searchMode = true;
+      this.sortType(this.sortChoice); 
+    },
+
+    sortType(arrayOfChoices) { //функция вызова одной из сортировок
+      if(arrayOfChoices[0] == null) { 
+        this.descendingSort(arrayOfChoices[1]);
+      }
+      else {
+        this.ascendingSort(arrayOfChoices[0]);
+      }
     }
 
   },
@@ -187,7 +195,5 @@ export const useFilmStore = defineStore('filmStorage', {
 })
 
 // на 12.03:
-// 1) Простое применение фильтрации без какой-либо *реальной* фильтрации сбрасывает сортировку.
-// 2) При удалении букв найденного фильма больше нет других вариантов, пока строка с именем фильма не будет полностью удалена.
-// 3) По удалению наименования фильма из строки сбрасывается сортировка
-// (4) Работает медленно
+// 1) Сортировка сбрасывается при: (!) поиске, (!) применении фильтров, (!) сбросе фильтров
+// (2) 

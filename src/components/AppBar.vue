@@ -5,7 +5,7 @@
         <p class="ml-16 pr-2 text-h5">Поиск Кино</p>
         <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"></v-icon>
       </div>
-      <v-btn @click="toggleTheme">
+      <v-btn @click="toggleTheme" title="Сменить тему">
         <v-icon icon="mdi-invert-colors"></v-icon>
       </v-btn>
     </v-app-bar>
