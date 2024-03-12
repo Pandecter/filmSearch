@@ -70,19 +70,23 @@ export const useFilmStore = defineStore('filmStorage', {
     },
   
     filmResult() {
-      if(this.curName == null && this.inSortMode.false) {
+      if(this.curName == null) {
         this.selectedFilms = [...this.filmDataStorage];
         this.updatePage();
+        
       }
       else {
         this.selectedFilms.length = 0;
         for(let i = 0; i < this.filmDataStorage.length; i++){
           if(this.filmDataStorage[i].name == this.curName) {
             this.selectedFilms.push(this.filmDataStorage[i]);
+            this.currentPage = 1;
             this.updatePage();
             break;
           }
         }
+        // this.updatePage();
+        
       }
     },
 
@@ -123,6 +127,8 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filterFunc(value) {
+      //if()//условие сорта...
+      
       this.inSortMode = true;
       let yearCondition = (value.year >= this.valuesOfRange[0][0]) && (value.year <= this.valuesOfRange[0][1]);
       let ratingCondition = (value.rating.kp >= this.valuesOfRange[1][0]) && (value.rating.kp  <= this.valuesOfRange[1][1]);
@@ -136,7 +142,6 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filterInit(){
-     
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       this.currentPage = 1;
