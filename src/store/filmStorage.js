@@ -23,7 +23,8 @@ export const useFilmStore = defineStore('filmStorage', {
       borderValuesOfFilters: [] ,
       inFilterMode: false,
       searchMode: true,
-      sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию
+      sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
+      //overlayToggle: false
     }
   },
   actions : {
@@ -152,6 +153,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       this.currentPage = 1;
+
       this.sortType(this.sortChoice);
       this.updatePage();
     },
@@ -176,7 +178,11 @@ export const useFilmStore = defineStore('filmStorage', {
       else {
         this.ascendingSort(arrayOfChoices[0]);
       }
-    }
+    },
+
+    // overlay() {
+    //   this.overlayToggle != this.overlayToggle;
+    // }
 
   },
   getters: {
@@ -194,6 +200,7 @@ export const useFilmStore = defineStore('filmStorage', {
   }
 })
 
-// на 12.03:
-// 1) Сортировка сбрасывается при: (!) поиске, (!) применении фильтров, (!) сбросе фильтров
-// (2) 
+// на 14.03:
+// 1) Нужно вывести сообщение о том, что результатов нет при: поиске/фильтрации.
+// 2) 404 error
+// 3) Подсвечивать использованные кнопки сортировки

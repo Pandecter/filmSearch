@@ -94,12 +94,49 @@
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
         fill-height>
-            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.showResultArray"
+            <v-card class="mt-10" v-for="filmData in FilmStore.showResultArray"
              :key="filmData.id"
              max-width="300"
              height="350"
              variant="outlined"
+             hover
              >  
+                <v-overlay 
+                 class="d-flex justify-space-around align-center mt-16"
+                 activator="parent"
+                >
+                 <v-sheet 
+                  rounded
+                  class="d-flex "
+                  :width="1000"
+                 >  
+                    <v-sheet width="150%" rounded>
+                        <v-img :src="filmData.poster.url"
+                         min-width="300"
+                         rounded
+                         cover
+                         gradient="to top, rgba(255, 255, 255,.33), rgba(0, 0, 0,.7)"
+                        >
+                        </v-img>
+                    </v-sheet>
+                    
+                    <div>
+                        <div class="d-flex justify-space-between align-center">
+                            <p class="text-h4 ml-2 mt-2 mb-2">
+                                {{ filmData.name }}
+                            </p>
+                            <p class="mr-2">
+                                {{ filmData.year }}
+                            </p>
+                        </div>
+                        
+                        <p class="ml-2 mr-2">
+                            {{ filmData.description }}
+                        </p>
+                    </div>
+                   
+                 </v-sheet>
+                </v-overlay>
                 <v-card-item>
                     <v-card-title> {{ filmData.name }} </v-card-title>
                     <v-card-subtitle> {{ filmData.year }} </v-card-subtitle>
@@ -117,7 +154,6 @@
                 </v-card-text>
                 <v-img
                  :min-width="300"
-                 aspect-ratio="0.66"
                  cover
                  :src="filmData.poster.url">
                 </v-img>
