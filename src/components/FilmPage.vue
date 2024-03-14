@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-container class="d-flex justify-center mr-14 mt-16" v-if="FilmStore.searchMode">
-                <div class="w-50">  
+            <div class="w-50">  
                 <v-autocomplete    
                  width="100"    
                  label="Поиск"
@@ -9,133 +9,147 @@
                  v-model="FilmStore.curName"
                  :items="FilmStore.filmNamesList"
                  @update:modelValue="FilmStore.filmResult()"
-                 
                 >
                 </v-autocomplete>
-                </div>
-                <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Сортировать фильмы"
-                 id="sort-activator"
-                 variant="outlined"
+            </div>
+            <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Сортировать фильмы"
+             id="sort-activator"
+             variant="outlined"
+            >
+                <v-icon icon="mdi-sort">
+                </v-icon>
+                <v-menu activator="#sort-activator"
+                 location="bottom" 
+                 :close-on-content-click="false"
                 >
-                    <v-icon icon="mdi-sort">
-                    </v-icon>
-                    <v-menu activator="#sort-activator"
-                    location="bottom" 
-                    :close-on-content-click="false">
-                        <v-sheet>
-                            <v-list>
-                                <v-list-item v-for="item in FilmStore.valuesOfSort"
-                                 :key="item.id"
-                                >
-                                    <v-list-item-title>
-                                        <div>
-                                            {{ item.type }}
-                                        </div>
-                                        <div>
-                                            <v-btn title="По возрастанию" class="mt-1 ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)"
-                                             variant="outlined"
-                                            >
-                                                <v-icon icon="mdi-sort-ascending"></v-icon>
-                                            </v-btn>
-                                            <v-btn title="По убыванию" class="mt-1 ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)"
-                                             variant="outlined"
-                                            >
-                                                <v-icon icon="mdi-sort-descending"></v-icon>
-                                            </v-btn>
-                                        </div>
-                                    </v-list-item-title>
-                                </v-list-item>    
-                            </v-list>
-                            <v-btn rounded="0" class="w-100" color="error" @click="FilmStore.restartSort()">Сбросить</v-btn>
-                        </v-sheet>
-                    </v-menu>
-                </v-btn>
-                <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Фильтровать фильмы"
-                 id="filter-activator"
-                 variant="outlined"
-                >
-                    <v-icon icon="mdi-filter">
-                    </v-icon>
-                    <v-menu activator="#filter-activator"
-                    location="bottom" 
-                    :close-on-content-click="false">
-                        <v-sheet>
-                            <v-list>
-                                <v-list-item v-for="(item, index) in FilmStore.valuesOfSort"
-                                 :key="item.id">
-                                    <v-list-item-title>
-                                        <div>
-                                            {{ item.type }}
-                                        </div>
-                                        <div>
-                                            <v-range-slider class="ml-5 mr-5 mt-7"
-                                             style="width: 200px"
-                                             :min="FilmStore.borderValuesOfFilters[index][0]"
-                                             :max="FilmStore.borderValuesOfFilters[index][1]"
-                                             thumb-label="always"
-                                             v-model="FilmStore.valuesOfRange[index]"
-                                             :step="FilmStore.stepValue[index]"
-                                            >
-                                            </v-range-slider>
-                                        </div>
-                                    </v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                            <div>
-                                <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartFilter()">Сбросить</v-btn>
-                                <v-btn rounded="0" class="w-50" variant="elevated" color="accept" @click="FilmStore.filterInit()">Применить</v-btn>
-                            </div>
-                        </v-sheet> 
-                    </v-menu>
-                </v-btn>
+                    <v-sheet>
+                        <v-list>
+                            <v-list-item v-for="item in FilmStore.valuesOfSort"
+                             :key="item.id"
+                            >
+                                <v-list-item-title>
+                                    <div>
+                                        {{ item.type }}
+                                    </div>
+                                    <div>
+                                        <v-btn title="По возрастанию" class="mt-1 ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)"
+                                         variant="outlined"
+                                        >
+                                            <v-icon icon="mdi-sort-ascending"></v-icon>
+                                        </v-btn>
+                                        <v-btn title="По убыванию" class="mt-1 ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)"
+                                         variant="outlined"
+                                        >
+                                            <v-icon icon="mdi-sort-descending"></v-icon>
+                                        </v-btn>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>    
+                        </v-list>
+                        <v-btn rounded="0" class="w-100" color="error" @click="FilmStore.restartSort()">Сбросить</v-btn>
+                    </v-sheet>
+                </v-menu>
+            </v-btn>
+            <v-btn class="ml-6 mt-1" size="large" elevation="0" title="Фильтровать фильмы"
+             id="filter-activator"
+             variant="outlined"
+            >
+                <v-icon icon="mdi-filter">
+                </v-icon>
+                <v-menu activator="#filter-activator"
+                 location="bottom" 
+                 :close-on-content-click="false">
+                    <v-sheet>
+                        <v-list>
+                            <v-list-item v-for="(item, index) in FilmStore.valuesOfSort"
+                             :key="item.id">
+                                <v-list-item-title>
+                                    <div>
+                                        {{ item.type }}
+                                    </div>
+                                    <div>
+                                        <v-range-slider class="ml-5 mr-5 mt-7"
+                                         style="width: 200px"
+                                         :min="FilmStore.borderValuesOfFilters[index][0]"
+                                         :max="FilmStore.borderValuesOfFilters[index][1]"
+                                         thumb-label="always"
+                                         v-model="FilmStore.valuesOfRange[index]"
+                                         :step="FilmStore.stepValue[index]"
+                                        >
+                                        </v-range-slider>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                        <div>
+                            <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartFilter()">Сбросить</v-btn>
+                            <v-btn rounded="0" class="w-50" variant="elevated" color="accept" @click="FilmStore.filterInit()">Применить</v-btn>
+                        </div>
+                    </v-sheet> 
+                </v-menu>
+            </v-btn>
         </v-container>
         <v-container v-else class="d-flex justify-center mt-10">
             <v-btn @click="FilmStore.backToSearch()"> Вернуться к поиску </v-btn>
         </v-container>
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
-        fill-height>
+         fill-height
+        >
             <v-card class="mt-10" v-for="filmData in FilmStore.showResultArray"
              :key="filmData.id"
              max-width="300"
              height="350"
              variant="outlined"
              hover
-             >  
+             link
+            >  
                 <v-overlay 
                  class="d-flex justify-space-around align-center mt-16"
                  activator="parent"
                 >
-                 <v-sheet 
-                  rounded
-                  class="d-flex "
-                  :width="1000"
-                 >  
-                    <v-sheet width="150%" rounded>
-                        <v-img :src="filmData.poster.url"
-                         min-width="300"
-                         rounded
-                         cover
-                         gradient="to top, rgba(255, 255, 255,.33), rgba(0, 0, 0,.7)"
-                        >
-                        </v-img>
-                    </v-sheet>
+                    <v-sheet 
+                     rounded
+                     class="d-flex"
+                     :width="1000"
+                    >  
+                        <v-sheet width="150%" rounded>
+                            <v-img :src="filmData.poster.url"
+                             min-width="300"
+                             rounded
+                             cover
+                             gradient="to top, rgba(255, 255, 255,.4), rgba(0, 0, 0,.7)"
+                             class="d-flex flex-column align-end"
+                            >
+                            <p class="text-h5 mr-1 mb-1">
+                                {{ filmData.rating.kp }}
+                                <v-icon  icon="mdi-star" class="pb-2">
+                                </v-icon>
+                            </p>
+                            </v-img>
+                            
+                        </v-sheet>
                     
-                    <div>
-                        <div class="d-flex justify-space-between align-center">
-                            <p class="text-h4 ml-2 mt-2 mb-2">
-                                {{ filmData.name }}
+                        <div>
+                            <div class="d-flex justify-space-between align-center">
+                                <p class="text-h4 ml-4 mt-4 mb-2">
+                                    {{ filmData.name }} 
+                                </p> 
+                                <p class="mr-6 font-weight-light">
+                                    {{ filmData.year }}
+                                </p>
+                            </div>
+                            <p class="ml-4 mr-4 mt-4">
+                                {{ filmData.description }}
                             </p>
-                            <p class="mr-2">
-                                {{ filmData.year }}
+                            <v-divider :thickness="3" class="mt-4 ml-4 mr-4"></v-divider>
+                            <p class="ml-4 mr-4 mt-4">
+                                Альтернативное название: {{ filmData.alternativeName }}
                             </p>
-                        </div>
-                        
-                        <p class="ml-2 mr-2">
-                            {{ filmData.description }}
-                        </p>
-                    </div>
-                   
-                 </v-sheet>
+                            <p class="ml-4 mr-4 mt-4">
+                               Длительность фильма: {{ filmData.movieLength }}
+                            </p>
+                        </div>  
+                    </v-sheet>
                 </v-overlay>
                 <v-card-item>
                     <v-card-title> {{ filmData.name }} </v-card-title>
