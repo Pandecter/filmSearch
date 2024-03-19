@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import filmData from '../../dataset/kinopoisk-1.json'
 
+//const STORE_NAME = 'main';
+
 export const useFilmStore = defineStore('filmStorage', {
   state: () => {
     return {
@@ -24,7 +26,7 @@ export const useFilmStore = defineStore('filmStorage', {
       inFilterMode: false,
       searchMode: true,
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
-      //overlayToggle: false
+      filmRating: []
     }
   },
   actions : {
@@ -40,6 +42,7 @@ export const useFilmStore = defineStore('filmStorage', {
         arrOfYears[i] = filmData.docs[i].year;
         arrOfRating[i] = filmData.docs[i].rating.kp;
         arrOfLength[i] = filmData.docs[i].movieLength;
+        this.filmRating.push(0);
       }
 
       // const min = 2024;
@@ -180,8 +183,8 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    // overlay() {
-    //   this.overlayToggle != this.overlayToggle;
+    // moveToLocalStorage() {
+    //   localStorage.setItem(STORE_NAME, JSON.stringify(this.filmRating))
     // }
 
   },
@@ -200,8 +203,12 @@ export const useFilmStore = defineStore('filmStorage', {
   }
 })
 
-// на 14.03:
+// на 19.03:
 // 1) Нужно вывести сообщение о том, что результатов нет при: поиске/фильтрации.
 // 2) 404 error
 // 3) Подсвечивать использованные кнопки сортировки
 // 4) Проблема с изображениями: возможно, первая парадигма работать не будет. В некоторых местах текста много...
+// 5) Некоторые поля фильма пустые 
+// 6) Изображения не оч
+// 7) Звезда не там находится
+// 8) разобраться с LocalStorage

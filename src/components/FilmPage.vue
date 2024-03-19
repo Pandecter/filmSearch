@@ -95,7 +95,7 @@
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
          fill-height
         >
-            <v-card class="mt-10" v-for="filmData in FilmStore.showResultArray"
+            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.showResultArray"
              :key="filmData.id"
              max-width="300"
              height="350"
@@ -104,27 +104,29 @@
              link
             >  
                 <v-overlay 
-                 class="d-flex justify-space-around align-center mt-16"
-                 activator="parent"
-                >
+                 class="d-flex justify-space-around align-center"
+                 activator="parent" 
+                >   
                     <v-sheet 
                      rounded
                      class="d-flex"
-                     :width="1000"
+                     :width="1250"
+                     :height="900"
                     >  
-                        <v-sheet width="150%" rounded>
+                        <v-sheet rounded>
                             <v-img :src="filmData.poster.url"
-                             min-width="300"
+                             height="900"
+                             min-width="400"
                              rounded
                              cover
                              gradient="to top, rgba(255, 255, 255,.4), rgba(0, 0, 0,.7)"
                              class="d-flex flex-column align-end"
                             >
-                            <p class="text-h5 mr-1 mb-1">
-                                {{ filmData.rating.kp }}
-                                <v-icon  icon="mdi-star" class="pb-2">
-                                </v-icon>
-                            </p>
+                                <p class="text-h5 mr-1 mt-16">
+                                    {{ filmData.rating.kp }}
+                                    <v-icon  icon="mdi-star" class="pb-2">
+                                    </v-icon>
+                                </p>
                             </v-img>
                             
                         </v-sheet>
@@ -146,8 +148,43 @@
                                 Альтернативное название: {{ filmData.alternativeName }}
                             </p>
                             <p class="ml-4 mr-4 mt-4">
-                               Длительность фильма: {{ filmData.movieLength }}
+                               Длительность фильма: {{ filmData.movieLength }} мин
                             </p>
+                            <v-divider :thickness="3" class="mt-4 ml-4 mr-4"></v-divider>
+                            <p class="ml-4 mr-4 mt-4">
+                                Смотрите на
+                            </p>
+                            <v-list class="d-flex flex-row">
+                                <v-list-item 
+                                v-for="item in filmData.watchability.items"
+                                :key=item._id>
+                                    <a :href="item.url">
+                                        <v-img :src="item.logo.url"
+                                         width="25"
+                                         heigth="25"
+                                         rounded
+                                         :title="item.name"
+                                        >
+                                        </v-img>
+                                    </a>    
+                                </v-list-item>
+                            </v-list>
+                            <v-divider :thickness="3" class="mt-4 ml-4 mr-4"></v-divider>
+                            <p class="ml-4 mr-4 mt-4">
+                                Оцените фильм
+                            </p>
+                            <v-rating class="d-flex justify-center"
+                             length="10"
+                             size="80"
+                             v-model="FilmStore.filmRating[index]"
+                            >
+                            </v-rating>
+                            <p class="ml-4 mr-4 mt-4">
+                                Рекоммендуем посмотреть
+                            </p>
+                            <div>
+
+                            </div>
                         </div>  
                     </v-sheet>
                 </v-overlay>
@@ -184,6 +221,7 @@
 <script>
 import { useFilmStore } from "@/store/filmStorage"
 
+
 export default {
     data() {
         return {
@@ -191,6 +229,9 @@ export default {
         }
     },
 }
+
+
+//localStorage.setItem('ratings', JSON.stringify(FilmStore.filmRating))
 </script>
 
 <style scoped lang="scss">
