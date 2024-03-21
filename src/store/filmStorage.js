@@ -26,7 +26,14 @@ export const useFilmStore = defineStore('filmStorage', {
       inFilterMode: false,
       searchMode: true,
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
-      filmRating: []
+      filmRating: [],
+      recommendedFilms: [],
+      // favs.find((film) => film.id === id): [
+      //   {
+      //     film: "obj",
+      //     rating: 5, 
+      //   },
+      // ]
     }
   },
   actions : {
@@ -89,7 +96,6 @@ export const useFilmStore = defineStore('filmStorage', {
       this.sortChoice[0] = choice;
       this.sortChoice[1] = null;  
       let field = this.arrOfFields[choice];
-      //let result = this.selectedFilms;
       if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
         this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? 1 : ((b[field].kp > a[field].kp) ? -1 : 0))
       }
@@ -100,7 +106,6 @@ export const useFilmStore = defineStore('filmStorage', {
       this.sortChoice[0] = null;
       this.sortChoice[1] = choice;
       let field = this.arrOfFields[choice];
-      //let result = this.selectedFilms;
       if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
         this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? -1 : ((b[field].kp > a[field].kp) ? 1 : 0))
       }
@@ -183,6 +188,10 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
+    showRecommendedFilms(index) {
+      console.log("ID фильма: " + index);
+    }
+
     // moveToLocalStorage() {
     //   localStorage.setItem(STORE_NAME, JSON.stringify(this.filmRating))
     // }
@@ -212,3 +221,5 @@ export const useFilmStore = defineStore('filmStorage', {
 // 6) Изображения не оч
 // 7) Звезда не там находится
 // 8) разобраться с LocalStorage
+// 9) No data available в поиске
+// 10) некорректные индексы

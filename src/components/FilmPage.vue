@@ -106,12 +106,13 @@
                 <v-overlay 
                  class="d-flex justify-space-around align-center"
                  activator="parent" 
+                 @click="FilmStore.showRecommendedFilms(index)"
                 >   
                     <v-sheet 
                      rounded
                      class="d-flex"
-                     :width="1250"
-                     :height="900"
+                     width="80vw"
+                     height="90vh"
                     >  
                         <v-sheet rounded>
                             <v-img :src="filmData.poster.url"
@@ -130,8 +131,7 @@
                             </v-img>
                             
                         </v-sheet>
-                    
-                        <div>
+                        <div class="overflow-auto">
                             <div class="d-flex justify-space-between align-center">
                                 <p class="text-h4 ml-4 mt-4 mb-2">
                                     {{ filmData.name }} 
@@ -229,6 +229,13 @@ export default {
         }
     },
 }
+
+// const obj = {
+//     asd: 213,
+//     fds:654
+// }
+
+//const newObj = {...obj, newfield: 6755}
 
 
 //localStorage.setItem('ratings', JSON.stringify(FilmStore.filmRating))
