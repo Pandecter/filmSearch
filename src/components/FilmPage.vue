@@ -111,12 +111,12 @@
                     <v-sheet 
                      rounded
                      class="d-flex"
-                     width="80vw"
+                     width="85vw"
                      height="90vh"
                     >  
                         <v-sheet rounded>
                             <v-img :src="filmData.poster.url"
-                             height="900"
+                             height="90vh"
                              min-width="400"
                              rounded
                              cover

@@ -190,7 +190,7 @@ export const useFilmStore = defineStore('filmStorage', {
 
     showRecommendedFilms(index) {
       console.log("ID фильма: " + index);
-    }
+    },
 
     // moveToLocalStorage() {
     //   localStorage.setItem(STORE_NAME, JSON.stringify(this.filmRating))
