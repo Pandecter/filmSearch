@@ -180,10 +180,25 @@
                             >
                             </v-rating>
                             <p class="ml-4 mr-4 mt-4">
-                                Рекоммендуем посмотреть
+                                Рекомендуем посмотреть
                             </p>
-                            <div>
-
+                            <div class="d-flex justify-space-around w-100 mt-4">
+                                <div v-for="film in FilmStore.recommendedFilmsTEMP"
+                                 :key="film.id"
+                                >
+                                    <v-img :src="film.poster.url"
+                                     class="ml-4"
+                                     width="10vw"
+                                     height="20vh"
+                                     :title="film.name">
+                                    </v-img>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-center">
+                                <v-btn variant="outlined" 
+                                 class="mt-10 mb-4" 
+                                 @click="FilmStore.addToFavorites(filmData)"
+                                > Добавить в закладки</v-btn>
                             </div>
                         </div>  
                     </v-sheet>

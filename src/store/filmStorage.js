@@ -27,7 +27,9 @@ export const useFilmStore = defineStore('filmStorage', {
       searchMode: true,
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
       filmRating: [],
-      recommendedFilms: [],
+      recommendedFilmsTEMP: [],
+      favorites: [],
+      favButtonValue: ["Добавить в закладки", "Добавлено"]
       // favs.find((film) => film.id === id): [
       //   {
       //     film: "obj",
@@ -50,6 +52,10 @@ export const useFilmStore = defineStore('filmStorage', {
         arrOfRating[i] = filmData.docs[i].rating.kp;
         arrOfLength[i] = filmData.docs[i].movieLength;
         this.filmRating.push(0);
+      }
+
+      for(let i = 0; i < 5; i++) {
+        this.recommendedFilmsTEMP.push(this.filmDataStorage[i])
       }
 
       // const min = 2024;
@@ -188,9 +194,13 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    showRecommendedFilms(index) {
-      console.log("ID фильма: " + index);
+    showRecommendedFilms() {
+      //console.log("ID фильма: " + index);
     },
+
+    addToFavorites(filmObj) {
+      this.favorites.push(filmObj);
+    }
 
     // moveToLocalStorage() {
     //   localStorage.setItem(STORE_NAME, JSON.stringify(this.filmRating))
@@ -212,14 +222,15 @@ export const useFilmStore = defineStore('filmStorage', {
   }
 })
 
-// на 19.03:
+// на 22.03:
 // 1) Нужно вывести сообщение о том, что результатов нет при: поиске/фильтрации.
-// 2) 404 error
+// (*) 2) 404 error
 // 3) Подсвечивать использованные кнопки сортировки
-// 4) Проблема с изображениями: возможно, первая парадигма работать не будет. В некоторых местах текста много...
+// (*) 4) Проблема с изображениями: возможно, первая парадигма работать не будет. В некоторых местах текста много...
 // 5) Некоторые поля фильма пустые 
 // 6) Изображения не оч
 // 7) Звезда не там находится
 // 8) разобраться с LocalStorage
 // 9) No data available в поиске
 // 10) некорректные индексы
+// 11) toggleTheme при смене страниц работает некорректно
