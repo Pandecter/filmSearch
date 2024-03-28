@@ -27,7 +27,8 @@ export const useFilmStore = defineStore('filmStorage', {
       searchMode: true,
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
       favButtonValue: "Добавить в закладки",
-      favorites: []
+      favorites: [],
+      results: true 
       // favs.find((film) => film.id === id): [
       //   {
       //     film: "obj",
@@ -158,6 +159,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.currentPage = 1;
       this.inFilterMode = false;
       this.sortType(this.sortChoice);
+      this.results = true;
     },
 
     updatePage() {
@@ -193,6 +195,12 @@ export const useFilmStore = defineStore('filmStorage', {
     filterInit(){
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
+      if(this.selectedFilms.length === 0) {
+        this.results = false;
+      }
+      else {
+        this.results = true;
+      }
       this.currentPage = 1;
 
       this.sortType(this.sortChoice);
@@ -269,7 +277,7 @@ export const useFilmStore = defineStore('filmStorage', {
 // 5) Некоторые поля фильма пустые 
 // 6) Изображения не оч
 // 7) Звезда не там находится
-// 8) разобраться с LocalStorage
-// 9) No data available в поиске
+// (solved) 8) разобраться с LocalStorage
+// (solved) 9) No data available в поиске
 // (solved) 10) некорректные индексы
 // (solved) 11) toggleTheme при смене страниц работает некорректно

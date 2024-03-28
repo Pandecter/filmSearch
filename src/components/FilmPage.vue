@@ -6,6 +6,7 @@
                  width="100"    
                  label="Поиск"
                  variant="outlined"
+                 no-data-text="По данному запросу нет результатов"
                  v-model="FilmStore.curName"
                  :items="FilmStore.filmNamesList"
                  @update:modelValue="FilmStore.filmResult()"
@@ -92,7 +93,7 @@
         <v-container v-else class="d-flex justify-center mt-10">
             <v-btn @click="FilmStore.backToSearch()"> Вернуться к поиску </v-btn>
         </v-container>
-        <v-container class="d-flex flex-row flex-wrap justify-space-around"
+        <v-container v-if="FilmStore.results" class="d-flex flex-row flex-wrap justify-space-around"
          fill-height
         >
             <v-card class="mt-10" v-for="filmData in FilmStore.showResultArray"
@@ -227,6 +228,11 @@
                  :src="filmData.poster.url">
                 </v-img>
             </v-card>
+        </v-container>
+        <v-container v-else class="d-flex justify-center align-center text-h5">
+            <p>
+                Нет результатов
+            </p>
         </v-container>
         <v-pagination :length="FilmStore.paginationLength"
          v-model="FilmStore.currentPage"
