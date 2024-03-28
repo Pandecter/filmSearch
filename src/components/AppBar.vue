@@ -16,15 +16,12 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
   import { useTheme } from 'vuetify/lib/framework.mjs';
 
   const theme = useTheme();
-  const darkMode = ref(false);
 
   const toggleTheme = () => {
-    darkMode.value = !darkMode.value;
-    theme.global.name.value = darkMode.value ? "dark" : "light";
+    theme.global.name.value = theme.global.name.value === 'dark' ? 'light' : 'dark';
   }
 
 </script>

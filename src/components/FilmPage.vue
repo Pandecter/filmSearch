@@ -183,14 +183,14 @@
                                 Рекомендуем посмотреть
                             </p>
                             <div class="d-flex justify-space-around w-100 mt-4">
-                                <div v-for="film in FilmStore.recommendedFilmsTEMP"
-                                 :key="film.id"
-                                >
-                                    <v-img :src="film.poster.url"
+                                <div v-for="recomendedFilm in filmData.similarFilms"
+                                 :key="recomendedFilm.id"
+                                >   
+                                    <v-img :src="recomendedFilm.poster.url"
                                      class="ml-4"
                                      width="10vw"
                                      height="20vh"
-                                     :title="film.name">
+                                     :title="recomendedFilm.name">
                                     </v-img>
                                 </div>
                             </div>
