@@ -35,11 +35,13 @@
                                     <div>
                                         <v-btn title="По возрастанию" class="mt-1 ml-3 mb-1" @click="FilmStore.ascendingSort(item.id)"
                                          variant="outlined"
+                                         :active="FilmStore.ascBut[item.id]"
                                         >
                                             <v-icon icon="mdi-sort-ascending"></v-icon>
                                         </v-btn>
                                         <v-btn title="По убыванию" class="mt-1 ml-3 mb-1 mr-3" @click="FilmStore.descendingSort(item.id)"
                                          variant="outlined"
+                                         :active="FilmStore.desBut[item.id]"
                                         >
                                             <v-icon icon="mdi-sort-descending"></v-icon>
                                         </v-btn>

@@ -1,16 +1,19 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <div class="ml-16 w-100 d-flex justify-center">
-        <p class="ml-16 pr-2 text-h5">Поиск Кино</p>
+      <div class="ml-16 pl-10 w-100 d-flex justify-center"
+      :color="red">
+        <p class="ml-16 pl-16 pr-2 text-h5">Поиск Кино</p>
         <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"></v-icon>
       </div>
-      <v-btn @click="$router.push('/favorites')" variant="tonal" title="Избранное">
-        <v-icon icon="mdi-star"></v-icon>
-      </v-btn>
-      <v-btn @click="toggleTheme" title="Сменить тему">
-        <v-icon icon="mdi-invert-colors"></v-icon>
-      </v-btn>
+      <div class="d-flex justify-end">
+        <v-btn @click="$router.push('/favorites')" variant="outlined" title="Избранное" class="mr-8">
+          Закладки
+        </v-btn>
+        <v-btn @click="toggleTheme" title="Сменить тему" class="mr-4">
+          <v-icon icon="mdi-invert-colors"></v-icon>
+        </v-btn>
+      </div>
     </v-app-bar>
   </v-app>
 </template>

@@ -28,7 +28,9 @@ export const useFilmStore = defineStore('filmStorage', {
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
       favButtonValue: "Добавить в закладки",
       favorites: [],
-      results: true 
+      results: true,
+      ascBut: [false, false, false],
+      desBut: [false, false, false] 
       // favs.find((film) => film.id === id): [
       //   {
       //     film: "obj",
@@ -127,6 +129,9 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     ascendingSort(choice) {
+      this.desBut.fill(false);
+      this.ascBut.fill(false);
+      this.ascBut[choice] = true;
       this.sortChoice[0] = choice;
       this.sortChoice[1] = null;  
       let field = this.arrOfFields[choice];
@@ -137,6 +142,9 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     descendingSort(choice) {
+      this.desBut.fill(false);
+      this.ascBut.fill(false);
+      this.desBut[choice] = true;
       this.sortChoice[0] = null;
       this.sortChoice[1] = choice;
       let field = this.arrOfFields[choice];
@@ -150,6 +158,8 @@ export const useFilmStore = defineStore('filmStorage', {
       this.selectedFilms = [...this.filmDataStorage];
       this.sortChoice[0] = null;
       this.sortChoice[1] = null;
+      this.desBut.fill(false);
+      this.ascBut.fill(false);
     },
 
     restartFilter() {
@@ -270,7 +280,7 @@ export const useFilmStore = defineStore('filmStorage', {
 })
 
 // на 28.03:
-// 1) Нужно вывести сообщение о том, что результатов нет при: поиске/фильтрации.
+// (solved) 1) Нужно вывести сообщение о том, что результатов нет при: поиске/фильтрации.
 // (solved) 2) 404 error
 // 3) Подсвечивать использованные кнопки сортировки
 // (solved) 4) Проблема с изображениями: возможно, первая парадигма работать не будет. В некоторых местах текста много...
