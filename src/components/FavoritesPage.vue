@@ -6,12 +6,12 @@
                 <v-app-title class="text-h5 mr-16"> Избранное </v-app-title>
             </div>
         </v-app-bar>
-        <div class="d-flex justify-space-around mt-16">
+        <div class="d-flex justify-space-around mt-16 flex-wrap">
             <v-card v-for="favorite in FilmStore.favorites"
              :key="favorite.id"
              class="mt-16"
-             width="10vw"
-             heigth="20vh">
+             width="150"
+             heigth="250">
                 <v-card-item>
                     <v-card-text>
                         {{ favorite.name }}

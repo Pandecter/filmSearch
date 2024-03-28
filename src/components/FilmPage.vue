@@ -95,7 +95,7 @@
         <v-container class="d-flex flex-row flex-wrap justify-space-around"
          fill-height
         >
-            <v-card class="mt-10" v-for="(filmData, index) in FilmStore.showResultArray"
+            <v-card class="mt-10" v-for="filmData in FilmStore.showResultArray"
              :key="filmData.id"
              max-width="300"
              height="350"
@@ -106,7 +106,6 @@
                 <v-overlay 
                  class="d-flex justify-space-around align-center"
                  activator="parent" 
-                 @click="FilmStore.showRecommendedFilms(index)"
                 >   
                     <v-sheet 
                      rounded
@@ -176,7 +175,8 @@
                             <v-rating class="d-flex justify-center"
                              length="10"
                              size="80"
-                             v-model="FilmStore.filmRating[index]"
+                             v-model="filmData.filmRating"
+                             @click="FilmStore.moveToFavorites(filmData)"
                             >
                             </v-rating>
                             <p class="ml-4 mr-4 mt-4">
@@ -197,8 +197,11 @@
                             <div class="d-flex justify-center">
                                 <v-btn variant="outlined" 
                                  class="mt-10 mb-4" 
-                                 @click="FilmStore.addToFavorites(filmData)"
-                                > Добавить в закладки</v-btn>
+                                 @click="FilmStore.moveToFavorites(filmData)"
+                                 :disabled="filmData.isFavorite"
+                                > 
+                                    Добавить в закладки
+                                </v-btn>
                             </div>
                         </div>  
                     </v-sheet>

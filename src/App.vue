@@ -12,12 +12,11 @@
       }
     },
     mounted() { // при монтировании экземпляра загружаем файлы с json
+      if(localStorage.getItem("favorites")) {
+        this.FilmStore.favorites = [...(JSON.parse(localStorage.getItem("favorites")))]
+      }
       this.FilmStore.moveToStorageArrays();
-      
     },
-    // updated() {
-    //   console.log("updated");
-    //   //this.FilmStore.updateFunc();
-    // }
+
   }
 </script>
