@@ -2,9 +2,14 @@
     <v-app>
         <v-app-bar>
             <v-btn @click="$router.push('/')" variant="flat" color="error"> Назад </v-btn>
-            <div class="d-flex justify-center w-100 mr-16">
-                <v-app-title class="text-h5 mr-16"> Избранное </v-app-title>
+            <div class="d-flex justify-center w-100 mr-10">
+                <v-app-title class="text-h5"> Избранное </v-app-title>
             </div>
+            <v-btn icon="mdi-filter-outline"
+             variant="plain"
+             title="Фильтрация"
+             id="filter-activator">
+            </v-btn>
         </v-app-bar>
         <v-container class="d-flex flex-row flex-wrap justify-space-around mt-16">
             <v-card v-for="favorite in FilmStore.favorites"
@@ -20,7 +25,7 @@
                 </v-card-text>
                 <v-btn icon="mdi-close-thick"
                  title="Удалить из закладок"
-                 variant="text"
+                 variant="plain"
                  color="error"
                  @click="FilmStore.removeFroFavorites(favorite)">
                 </v-btn>           
