@@ -6,31 +6,53 @@
                 <v-app-title class="text-h5 mr-16"> Избранное </v-app-title>
             </div>
         </v-app-bar>
-        <div class="d-flex justify-space-around mt-16 flex-wrap">
+        <v-container class="d-flex flex-row flex-wrap justify-space-around mt-16">
             <v-card v-for="favorite in FilmStore.favorites"
              :key="favorite.id"
-             class="mt-16"
-             width="150"
-             heigth="250">
-                <v-card-item>
-                    <v-card-text>
-                        {{ favorite.name }}
-                    </v-card-text>
-                    <v-btn icon="mdi-close-thick"
-                     variant="text"
-                     color="error"
-                     @click="FilmStore.removeFroFavorites(favorite)">
-                    </v-btn>
-                </v-card-item>
-                <div>
-                    <v-img 
-                     :src="favorite.poster.url"
-                     cover>
-                    </v-img>
-                </div>
+             class="mt-8"
+             width="250"
+             heigth="350"
+             variant="outlined"
+            >
+            <div class="d-flex justify-space-between">
+                <v-card-text class="text-truncate text-h6" :title="favorite.name">
+                    {{ favorite.name }}
+                </v-card-text>
+                <v-btn icon="mdi-close-thick"
+                 title="Удалить из закладок"
+                 variant="text"
+                 color="error"
+                 @click="FilmStore.removeFroFavorites(favorite)">
+                </v-btn>           
+            </div>
+            <div class="ml-4">
+                <p>
+                    {{ favorite.year }}
+                </p>
+                <p>
+                    Ваша оценка: {{ favorite.filmRating }}
+                    <v-icon  icon="mdi-star mb-1">
+                    </v-icon>
+                </p>
+            </div>
+                <v-img 
+                 :src="favorite.poster.url"
+                 gradient="to top, rgba(255, 255, 255,.5), rgba(0, 0, 0,.7)"
+                 cover>
+                    <div class="h-100 d-flex justify-space-between align-end">
+                        <div class="mb-1 ml-2">
+                            {{ favorite.movieLength }} мин
+                        </div>
+                        <div class="mr-1">
+                                {{ favorite.rating.kp }}                     
+                            <v-icon  icon="mdi-star mb-1">
+                            </v-icon>
+                        </div>  
+                    </div>
+                </v-img>
+
             </v-card>
-        </div>
-        
+        </v-container>
     </v-app>
 </template>
 

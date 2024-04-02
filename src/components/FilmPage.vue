@@ -125,11 +125,13 @@
                              gradient="to top, rgba(255, 255, 255,.4), rgba(0, 0, 0,.7)"
                              class="d-flex flex-column align-end"
                             >
-                                <p class="text-h5 mr-1 mt-16">
-                                    {{ filmData.rating.kp }}
-                                    <v-icon  icon="mdi-star" class="pb-2">
-                                    </v-icon>
-                                </p>
+                                <div class="h-100 d-flex justify-end align-end">
+                                    <div class="mr-1">
+                                        {{ filmData.rating.kp }}                     
+                                        <v-icon  icon="mdi-star mb-1">
+                                        </v-icon>
+                                    </div>  
+                                </div>
                             </v-img>
                             
                         </v-sheet>
