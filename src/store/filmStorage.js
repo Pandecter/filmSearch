@@ -50,7 +50,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.filmDataStorage = [...filmData.docs] //изначальный массив, взятый с JSON, над которым проводятся действия
       
       tempArr = [...filmData.docs] //создадим временный массив, который дополним полем рекомендованных фильмов
-      tempArr.sort((a,b) =>  //сортируем массив по трем полям, чтоб сформировать схожие по рейтингу/году/длине фильмы
+      tempArr.sort((a,b) =>  //сортируем массив по трем полям, чтоб сформировать схожие по рейтингу фильмы по возрастанию
         (a.rating.kp > b.rating.kp) ? 1 : (b.rating.kp > a.rating.kp) ? -1 : 0
       );
 
@@ -60,23 +60,26 @@ export const useFilmStore = defineStore('filmStorage', {
         this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
         this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
         let index = tempArr.findIndex((el) => el.id === filmId);
+
         for(let j = 0; j < 4; j++) { 
-          if(index >= this.filmDataStorage.length - 1) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 5 фильмов
-            this.filmDataStorage[i].similarFilms[j] = tempArr[this.filmDataStorage.length - (2+ j)];
+          if(index >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
+            this.filmDataStorage[i].similarFilms[j] = tempArr[this.filmDataStorage.length - (2 + j)];
           }
-          else if(index <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 5 фильмов
+          else if(index <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 4 фильма
             this.filmDataStorage[i].similarFilms[j] = tempArr[2 + j];
           }
           else {
-            if(j <= 1) {
+            if(j <= 1) { //2 фильма ДО 
               this.filmDataStorage[i].similarFilms[j] = tempArr[index - 1 - j];
             }
-            else {
+            else { //2 фильма ПОСЛЕ
               this.filmDataStorage[i].similarFilms[j] = tempArr[index - 1 + j];
             }
           }
         }
       } 
+
+      console.log(tempArr);
 
       if(this.favorites !== null) { //если есть данные с localStorage
         //console.log(this.favorites.length)
