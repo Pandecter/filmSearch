@@ -16,6 +16,11 @@
                     <v-card-text>
                         {{ favorite.name }}
                     </v-card-text>
+                    <v-btn icon="mdi-close-thick"
+                     variant="text"
+                     color="error"
+                     @click="FilmStore.removeFroFavorites(favorite)">
+                    </v-btn>
                 </v-card-item>
                 <div>
                     <v-img 

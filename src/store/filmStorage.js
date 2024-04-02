@@ -255,7 +255,17 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    
+    removeFroFavorites(filmData) {
+      let updatedStorage = JSON.parse(localStorage.getItem("favorites")); //обновляем (удаляем элемент) список закладок
+      let tempName = filmData.name;
+      updatedStorage = updatedStorage.filter(item => item.name !== tempName);
+      localStorage.setItem("favorites", JSON.stringify(updatedStorage));
+
+      let index = this.filmDataStorage.findIndex(el => el.name === tempName); //обнуляем данные для корректной работы
+      this.filmDataStorage[index].filmRating = 0;
+      this.filmDataStorage[index].isFavorite = false;
+      this.favorites = this.favorites.filter(item => item.name !== tempName);
+    }
 
   },
   getters: {
