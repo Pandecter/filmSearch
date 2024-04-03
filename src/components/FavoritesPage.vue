@@ -1,14 +1,48 @@
 <template>
     <v-app>
         <v-app-bar>
-            <v-btn @click="$router.push('/')" variant="flat" color="error"> Назад </v-btn>
+            <v-btn @click="FilmStore.toMainPage()" variant="flat" color="error"> Назад </v-btn>
             <div class="d-flex justify-center w-100 mr-10">
                 <v-app-title class="text-h5"> Избранное </v-app-title>
             </div>
-            <v-btn icon="mdi-filter-outline"
+            <v-btn 
              variant="plain"
              title="Фильтрация"
-             id="filter-activator">
+             id="filter-activator"
+            >   <v-icon icon="mdi-filter-outline"></v-icon>
+                <v-menu   
+                 activator="#filter-activator"
+                 location="start" 
+                 :close-on-content-click="false"
+                >
+                    <v-sheet>
+                        <v-list>
+                            <v-list-item v-for="(item, index) in FilmStore.valuesOfSort"
+                             :key="item.id">
+                                <v-list-item-title>
+                                    <div>
+                                        {{ item.type }}
+                                    </div>
+                                    <div>
+                                        <v-range-slider class="ml-5 mr-5 mt-7"
+                                         style="width: 200px"
+                                         :min="FilmStore.borderValuesOfFilters[index][0]"
+                                         :max="FilmStore.borderValuesOfFilters[index][1]"
+                                         thumb-label="always"
+                                         v-model="FilmStore.valueOfRangeFavorites[index]"
+                                         :step="FilmStore.stepValue[index]"
+                                        >
+                                        </v-range-slider>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                        <div>
+                            <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartFavoritesFilter()">Сбросить</v-btn>
+                            <v-btn rounded="0" class="w-50" variant="elevated" color="accept" @click="FilmStore.favoritesFilterInit()">Применить</v-btn>
+                        </div>
+                    </v-sheet>
+                </v-menu>
             </v-btn>
         </v-app-bar>
         <v-container class="d-flex flex-row flex-wrap justify-space-around mt-16">

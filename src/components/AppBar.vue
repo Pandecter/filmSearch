@@ -7,7 +7,7 @@
         <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"></v-icon>
       </div>
       <div class="d-flex justify-end">
-        <v-btn @click="$router.push('/favorites')" variant="outlined" title="Избранное" class="mr-8">
+        <v-btn @click="FilmStore.toFavoritesPage()" variant="outlined" title="Избранное" class="mr-8">
           Закладки
         </v-btn>
         <v-btn @click="toggleTheme" title="Сменить тему" class="mr-4">
@@ -26,7 +26,18 @@
   const toggleTheme = () => {
     theme.global.name.value = theme.global.name.value === 'dark' ? 'light' : 'dark';
   }
+</script>
 
+<script>
+  import { useFilmStore } from "@/store/filmStorage"
+
+  export default {
+    data() {
+        return {
+            FilmStore: useFilmStore()
+        }
+    },
+}
 </script>
 
 <style scoped lang="scss">

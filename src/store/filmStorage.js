@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import filmData from '../../dataset/kinopoisk-1.json'
+import router from '@/router'
 
 //const STORE_NAME = 'main';
 
@@ -22,7 +23,8 @@ export const useFilmStore = defineStore('filmStorage', {
       arrOfFields : ["year", "rating", "movieLength"],
       stepValue: [1, 0.1, 1],
       valuesOfRange: [],
-      borderValuesOfFilters: [] ,
+      valueOfRangeFavorites: [],
+      borderValuesOfFilters: [],
       inFilterMode: false,
       searchMode: true,
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
@@ -44,7 +46,7 @@ export const useFilmStore = defineStore('filmStorage', {
       let arrOfYears = [];
       let arrOfRating = [];
       let arrOfLength = [];
-      let arrForBorders = [];
+      //let arrForBorders = [];
       let tempArr = []; 
 
       this.filmDataStorage = [...filmData.docs] //изначальный массив, взятый с JSON, над которым проводятся действия
@@ -79,13 +81,13 @@ export const useFilmStore = defineStore('filmStorage', {
         }
       } 
 
-      console.log(tempArr);
+      //console.log(tempArr);
 
       if(this.favorites !== null) { //если есть данные с localStorage
         //console.log(this.favorites.length)
         for(let i = 0; i < this.favorites.length; i++) {
           let index = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
-          console.log(this.favorites[i])
+          //console.log(this.favorites[i])
           this.filmDataStorage[index] = this.favorites[i];
         }
       }
@@ -99,22 +101,42 @@ export const useFilmStore = defineStore('filmStorage', {
         arrOfLength[i] = this.filmDataStorage[i].movieLength;
       }
 
-      this.borderValuesOfFilters.push(arrForBorders.slice());
-      this.borderValuesOfFilters[0][0] = Math.min.apply(Math, arrOfYears);
-      this.borderValuesOfFilters[0][1] = Math.max.apply(Math, arrOfYears);
+      this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
 
-      this.borderValuesOfFilters.push(arrForBorders.slice());
-      this.borderValuesOfFilters[1][0] = Math.min.apply(Math, arrOfRating);
-      this.borderValuesOfFilters[1][1] = Math.max.apply(Math, arrOfRating);
+      // this.borderValuesOfFilters.push(arrForBorders.slice());
+      // this.borderValuesOfFilters[0][0] = Math.min.apply(Math, arrOfYears);
+      // this.borderValuesOfFilters[0][1] = Math.max.apply(Math, arrOfYears);
 
-      this.borderValuesOfFilters.push(arrForBorders.slice());
-      this.borderValuesOfFilters[2][0] = Math.min.apply(Math, arrOfLength);
-      this.borderValuesOfFilters[2][1] = Math.max.apply(Math, arrOfLength);
+      // this.borderValuesOfFilters.push(arrForBorders.slice());
+      // this.borderValuesOfFilters[1][0] = Math.min.apply(Math, arrOfRating);
+      // this.borderValuesOfFilters[1][1] = Math.max.apply(Math, arrOfRating);
 
-      this.valuesOfRange = [...this.borderValuesOfFilters]
+      // this.borderValuesOfFilters.push(arrForBorders.slice());
+      // this.borderValuesOfFilters[2][0] = Math.min.apply(Math, arrOfLength);
+      // this.borderValuesOfFilters[2][1] = Math.max.apply(Math, arrOfLength);
+
+      this.valuesOfRange = [...this.borderValuesOfFilters];
 
       this.end = this.countOfFilmsOnPage;
       this.updatePage();
+    },
+
+    borderMaker(years, ratings, lengths) {
+      let arrForBorders = [];
+
+      this.borderValuesOfFilters.push(arrForBorders.slice());
+      this.borderValuesOfFilters[0][0] = Math.min.apply(Math, years);
+      this.borderValuesOfFilters[0][1] = Math.max.apply(Math, years);
+
+      this.borderValuesOfFilters.push(arrForBorders.slice());
+      this.borderValuesOfFilters[1][0] = Math.min.apply(Math, ratings);
+      this.borderValuesOfFilters[1][1] = Math.max.apply(Math, ratings);
+
+      this.borderValuesOfFilters.push(arrForBorders.slice());
+      this.borderValuesOfFilters[2][0] = Math.min.apply(Math, lengths);
+      this.borderValuesOfFilters[2][1] = Math.max.apply(Math, lengths);
+
+      //this.valuesOfRange = [...this.borderValuesOfFilters]
     },
   
     filmResult() {
@@ -168,11 +190,16 @@ export const useFilmStore = defineStore('filmStorage', {
     restartFilter() {
       this.selectedFilms = [...this.filmDataStorage];
       this.valuesOfRange = [...this.borderValuesOfFilters];
-      this.updatePage();
       this.currentPage = 1;
+      this.updatePage();
       this.inFilterMode = false;
       this.sortType(this.sortChoice);
       this.results = true;
+    },
+
+    restartFavoritesFilter() {
+      this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
+      this.favorites = JSON.parse(localStorage.getItem("favorites"));
     },
 
     updatePage() {
@@ -205,6 +232,23 @@ export const useFilmStore = defineStore('filmStorage', {
       return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
     },
 
+    favoriteFilterFunc(value) {
+      // let yearResetCondition = (this.valuesOfRange[0][0] == this.borderValuesOfFilters[0][0]) &&
+      //                          (this.valuesOfRange[0][1] == this.borderValuesOfFilters[0][1]);
+      // let ratingResetCondition = (this.valuesOfRange[1][0] == this.borderValuesOfFilters[1][0]) &&
+      //                            (this.valuesOfRange[1][1]  == this.borderValuesOfFilters[1][1]);
+      // let lengthResetCondition = (this.valuesOfRange[2][0] == this.borderValuesOfFilters[2][0]) && 
+      //                            (this.valuesOfRange[2][1] == this.borderValuesOfFilters[2][1]);
+
+      let yearTrueCondition = (value.year >= this.valueOfRangeFavorites[0][0]) &&
+                              (value.year <= this.valueOfRangeFavorites[0][1]);
+      let ratingTrueCondition = (value.rating.kp >= this.valueOfRangeFavorites[1][0]) &&
+                                (value.rating.kp  <= this.valueOfRangeFavorites[1][1]);
+      let lengthTrueCondition = (value.movieLength >= this.valueOfRangeFavorites[2][0]) &&
+                                (value.movieLength <= this.valueOfRangeFavorites[2][1]);
+      return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
+    },
+
     filterInit(){
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
@@ -218,6 +262,11 @@ export const useFilmStore = defineStore('filmStorage', {
 
       this.sortType(this.sortChoice);
       this.updatePage();
+    },
+
+    favoritesFilterInit() {
+      this.favorites = JSON.parse(localStorage.getItem("favorites")); 
+      this.favorites = this.favorites.filter(this.favoriteFilterFunc);
     },
 
     backToSearch() {
@@ -265,8 +314,34 @@ export const useFilmStore = defineStore('filmStorage', {
       this.filmDataStorage[index].filmRating = 0;
       this.filmDataStorage[index].isFavorite = false;
       this.favorites = this.favorites.filter(item => item.name !== tempName);
-    }
+    },
 
+    toFavoritesPage() {
+      let yearsFavorite = [];
+      let ratingsFavorite = [];
+      let lengthsFavorite = [];
+      for(let i = 0; i < this.favorites.length; i++) { 
+        yearsFavorite[i] = this.filmDataStorage[i].year;
+        ratingsFavorite[i] = this.filmDataStorage[i].rating.kp;
+        lengthsFavorite[i] = this.filmDataStorage[i].movieLength;
+      }
+      this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
+      this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
+      router.push('/favorites');
+    },
+
+    toMainPage() {
+      let arrOfYears = [];
+      let arrOfRating = [];
+      let arrOfLength = [];
+      for(let i = 0; i < this.filmDataStorage.length; i++) { 
+        arrOfYears[i] = this.filmDataStorage[i].year;
+        arrOfRating[i] = this.filmDataStorage[i].rating.kp;
+        arrOfLength[i] = this.filmDataStorage[i].movieLength;
+      }
+      this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
+      router.push('/');
+    }
   },
   getters: {
     showResultArray() {
@@ -292,15 +367,8 @@ export const useFilmStore = defineStore('filmStorage', {
   }
 })
 
-// на 28.03:
-// (solved) 1) Нужно вывести сообщение о том, что результатов нет при: поиске/фильтрации.
-// (solved) 2) 404 error
-// (solved) 3) Подсвечивать использованные кнопки сортировки
-// (solved) 4) Проблема с изображениями: возможно, первая парадигма работать не будет. В некоторых местах текста много...
-// 5) Некоторые поля фильма пустые 
-// 6) Изображения не оч
-// (solved) 7) Звезда не там находится
-// (solved) 8) разобраться с LocalStorage
-// (solved) 9) No data available в поиске
-// (solved) 10) некорректные индексы
-// (solved) 11) toggleTheme при смене страниц работает некорректно
+// на 02.04:
+// 1) картинки не оч 
+// 2) ошибка при фильтрации не на первой странице (кнопка сброса работает некорректно)
+// 3) ошибка при фильтрации на странице закладок
+
