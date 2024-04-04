@@ -19,6 +19,5 @@
       this.FilmStore.moveToStorageArrays();
       router.push('/');
     },
-
   }
 </script>
