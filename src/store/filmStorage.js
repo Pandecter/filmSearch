@@ -5,39 +5,39 @@ import router from '@/router'
 export const useFilmStore = defineStore('filmStorage', {
   state: () => {
     return {
-      filmDataStorage: [],
+      filmDataStorage: [], // массив данных, который не будет меняться
       filmNames: [],
-      selectedFilms: [],
+      selectedFilms: [], //здесь будут хранится фильмы с учетом фильтрации/сортировки
       paginationLength: 0,
       countOfFilmsOnPage: 25,
       currentPage: 1,
-      curName: null,
+      curName: null, //поле ввода названия
       valuesOfSort: [{ type: 'По году', id: 0},
                      { type: 'По рейтингу', id: 1},
-                     { type: 'По хронометражу', id: 2}
+                     { type: 'По хронометражу', id: 2} //виды сортировок
       ],
-      start: 0,
-      end: 0,
-      arrOfFields : ["year", "rating", "movieLength"],
-      stepValue: [1, 0.1, 1],
-      valuesOfRange: [],
-      valueOfRangeFavorites: [],
-      borderValuesOfFilters: [],
-      inFilterMode: false,
-      favoritesInFilterMode: false,
-      dialog: false,
-      searchMode: true,
+      start: 0, //начало для пагинации
+      end: 0, //конец для пагинации
+      arrOfFields : ["year", "rating", "movieLength"], //используется для "вставки" в функциях сортировки
+      stepValue: [1, 0.1, 1], //шаги для ползунков фильтрации
+      valuesOfRange: [], //значения фильтров на основной странице
+      valueOfRangeFavorites: [], //значения фильтров на странице закладок
+      borderValuesOfFilters: [], //граничные значения фильтров (меняются от страницы к странице)
+      inFilterMode: false, //bool значения для корректной работы сортировки в процессе фильтрации
+      favoritesInFilterMode: false, //аналогично для страницы закладок
+      dialog: false, //условие всплывающего окна на странице закладок
+      favoritesResults: true, //условие для отображения "нет результатов" для страницы закладок
+      results: true, //аналогично для основной страницы
+      searchMode: true, //условие для перехода в режим поиска/отображения всех фильмов на основной странице
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
-      favButtonValue: "Добавить в закладки",
-      favorites: [],
-      results: true,
-      favoritesResults: true,
-      ascBut: [false, false, false],
+      favButtonValue: "Добавить в закладки", 
+      favorites: [], //массив фильмов, добавленных в закладки
+      ascBut: [false, false, false], //необходимы для пометки кнопки конкретной сортировки как активной
       desBut: [false, false, false] 
     }
   },
   actions : {
-    moveToStorageArrays() {
+    moveToStorageArrays() { //функция, которая вызывается при запуске приложения
       let arrOfYears = [];
       let arrOfRating = [];
       let arrOfLength = [];
@@ -55,7 +55,7 @@ export const useFilmStore = defineStore('filmStorage', {
         this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
         this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
         this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
-        let index = tempArr.findIndex((el) => el.id === filmId);
+        let index = tempArr.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
 
         for(let j = 0; j < 4; j++) { 
           if(index >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
@@ -83,7 +83,7 @@ export const useFilmStore = defineStore('filmStorage', {
       }
 
       for(let i = 0; i < this.filmDataStorage.length; i++) { 
-        this.selectedFilms[i] = this.filmDataStorage[i]; //массив, который отоборажает выбранные фильмы с учетом сортировок/фильтров и тд
+        this.selectedFilms[i] = this.filmDataStorage[i]; 
         this.selectedFilms[i].rating.kp =  Number(this.selectedFilms[i].rating.kp).toFixed(1);
 
         arrOfYears[i] = this.filmDataStorage[i].year;
@@ -93,13 +93,13 @@ export const useFilmStore = defineStore('filmStorage', {
 
       this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
 
-      this.valuesOfRange = [...this.borderValuesOfFilters];
+      this.valuesOfRange = [...this.borderValuesOfFilters]; //заполним на старте значения текущей фильтрации граничными
 
       this.end = this.countOfFilmsOnPage;
       this.updatePage();
     },
 
-    borderMaker(years, ratings, lengths) {
+    borderMaker(years, ratings, lengths) { //функция, которая задает границы для фильтрации
       let arrForBorders = [];
 
       this.borderValuesOfFilters.length = 0; //необходимо, чтоб массив при переходе со страницы на страницу бесконечно не заполнялся
@@ -117,7 +117,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.borderValuesOfFilters[2][1] = Math.max.apply(Math, lengths);
     },
   
-    filmResult() {
+    filmResult() { //выводит результат поиска фильма
       this.searchMode = false;
       this.selectedFilms.length = 0;
       for(let i = 0; i < this.filmDataStorage.length; i++){
@@ -130,8 +130,8 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    ascendingSort(choice) {
-      this.desBut.fill(false);
+    ascendingSort(choice) { //сортировка по возрастанию
+      this.desBut.fill(false); 
       this.ascBut.fill(false);
       this.ascBut[choice] = true;
       this.sortChoice[0] = choice;
@@ -143,7 +143,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
     },
 
-    descendingSort(choice) {
+    descendingSort(choice) { //сортировка по убыванию
       this.desBut.fill(false);
       this.ascBut.fill(false);
       this.desBut[choice] = true;
@@ -156,8 +156,8 @@ export const useFilmStore = defineStore('filmStorage', {
       this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? -1 : ((b[field] > a[field]) ? 1 : 0))
     },
 
-    restartSort() {
-      if(this.inFilterMode === true){
+    restartSort() { //сброс сортровки
+      if(this.inFilterMode === true){ 
         this.selectedFilms = [...this.filmDataStorage];
         this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       }
@@ -170,7 +170,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.ascBut.fill(false);
     },
 
-    restartFilter() {
+    restartFilter() { //сброс фильтров
       this.selectedFilms = [...this.filmDataStorage];
       this.valuesOfRange = [...this.borderValuesOfFilters];
       this.currentPage = 1;
@@ -180,20 +180,20 @@ export const useFilmStore = defineStore('filmStorage', {
       this.results = true;
     },
 
-    restartFavoritesFilter() {
+    restartFavoritesFilter() { //сброс фильтров на странице закладок
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
       this.favorites = JSON.parse(localStorage.getItem("favorites"));
       this.favoritesInFilterMode = false;
       this.favoritesResults = true;
     },
 
-    updatePage() {
+    updatePage() { //метод, который отвечает за работу пагинации и корректное отображение главной страницы
       this.paginationLength = Math.ceil(this.selectedFilms.length / this.countOfFilmsOnPage);
       this.start = this.countOfFilmsOnPage * (this.currentPage - 1);
       this.end = (this.countOfFilmsOnPage * this.currentPage);
     },
 
-    filterFunc(value) {
+    filterFunc(value) { //метод фильтрации для главной страницы
       let yearResetCondition = (this.valuesOfRange[0][0] == this.borderValuesOfFilters[0][0]) &&
                                (this.valuesOfRange[0][1] == this.borderValuesOfFilters[0][1]);
       let ratingResetCondition = (this.valuesOfRange[1][0] == this.borderValuesOfFilters[1][0]) &&
@@ -219,7 +219,7 @@ export const useFilmStore = defineStore('filmStorage', {
       return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
     },
 
-    favoritesFilterFunc(value) {
+    favoritesFilterFunc(value) { //метод фильтрации для закладок (т. к. переменная другая)
       let yearResetConditionFavorites = (this.valueOfRangeFavorites[0][0] == this.borderValuesOfFilters[0][0]) &&
                                (this.valueOfRangeFavorites[0][1] == this.borderValuesOfFilters[0][1]);
       let ratingResetConditionFavorites = (this.valueOfRangeFavorites[1][0] == this.borderValuesOfFilters[1][0]) &&
@@ -244,7 +244,7 @@ export const useFilmStore = defineStore('filmStorage', {
       return (yearTrueConditionFavorites && ratingTrueConditionFavorites && lengthTrueConditionFavorites)
     },
 
-    filterInit(){
+    filterInit(){ //вызов фильтрации для главной страницы
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       if(this.selectedFilms.length === 0) {
@@ -258,7 +258,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.updatePage();
     },
 
-    favoritesFilterInit() {
+    favoritesFilterInit() { //вызов фильтрации для закладок
       this.favorites = JSON.parse(localStorage.getItem("favorites")); 
       this.favorites = this.favorites.filter(this.favoritesFilterFunc);
       if(this.favorites.length === 0) {
@@ -269,7 +269,7 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    backToSearch() {
+    backToSearch() { //метод, который позволяет вернуться к поиску фильмов
       this.curName = null;
       if(this.inFilterMode == true) {
         this.filterInit();
@@ -291,7 +291,7 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    moveToFavorites(filmData) {
+    moveToFavorites(filmData) { //метод, который добавляет фильм в закладки
       if(!(this.favorites.find((el) => el.id === filmData.id))) {
         filmData.isFavorite = true;
         this.favorites.push(filmData);
@@ -305,7 +305,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
     },
 
-    removeFromFavorites(filmData) {
+    removeFromFavorites(filmData) { //метод, который убирает фильм из закладок
       let updatedStorage = JSON.parse(localStorage.getItem("favorites")); //обновляем (удаляем элемент) список закладок
       let tempName = filmData.name;
       updatedStorage = updatedStorage.filter(item => item.name !== tempName);
@@ -319,7 +319,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
     },
 
-    toFavoritesPage() {
+    toFavoritesPage() { //метод, который позволяет перейти к странице закладок и сформировать границы
       this.favoritesBorderChanger();
       if(this.valueOfRangeFavorites.length === 0) {
         
@@ -328,7 +328,7 @@ export const useFilmStore = defineStore('filmStorage', {
       router.push('/favorites');
     },
 
-    toMainPage() {
+    toMainPage() { //метод, который позволяет перейти к основной странице и сформировать границы
       if(this.favoritesInFilterMode) {
         this.dialog = true;
       }
@@ -347,7 +347,7 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
     
-    favoritesBorderChanger() {
+    favoritesBorderChanger() { //вспомогательный метод, который меняет границы фильтрации при удалении/добавлении закладок
       let yearsFavorite = [];
       let ratingsFavorite = [];
       let lengthsFavorite = [];
@@ -359,18 +359,18 @@ export const useFilmStore = defineStore('filmStorage', {
       this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
     },
 
-    fromDialogToMainPage() {
+    fromDialogToMainPage() { //метод, который вызывается из диалогового онка
       router.push('/');
       this.restartFavoritesFilter();
       this.dialog = false;
     }
   },
   getters: {
-    showResultArray() {
+    showResultArray() { //показывает результат фильтрации/сортировки
       return this.selectedFilms.slice(this.start, this.end);
     },
 
-    filmNamesList() {
+    filmNamesList() { //показывает названия фильмов в v-autocomplete
       this.filmNames.length = 0;
       for (let i = 0; i < this.selectedFilms.length; i++){
         this.filmNames.push(this.selectedFilms[i].name);
