@@ -225,6 +225,8 @@ export const useFilmStore = defineStore('filmStorage', {
 
       if(yearResetCondition && ratingResetCondition && lengthResetCondition) { //условие прекращения фильтрации
         this.inFilterMode = false;
+        this.currentPage = 1;
+        this.updatePage();
       }
       else { // условие начала фильтрации (необходимо для корректной работы поиска)
         this.inFilterMode = true;
@@ -232,21 +234,25 @@ export const useFilmStore = defineStore('filmStorage', {
       return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
     },
 
-    favoriteFilterFunc(value) {
-      // let yearResetCondition = (this.valuesOfRange[0][0] == this.borderValuesOfFilters[0][0]) &&
-      //                          (this.valuesOfRange[0][1] == this.borderValuesOfFilters[0][1]);
-      // let ratingResetCondition = (this.valuesOfRange[1][0] == this.borderValuesOfFilters[1][0]) &&
-      //                            (this.valuesOfRange[1][1]  == this.borderValuesOfFilters[1][1]);
-      // let lengthResetCondition = (this.valuesOfRange[2][0] == this.borderValuesOfFilters[2][0]) && 
-      //                            (this.valuesOfRange[2][1] == this.borderValuesOfFilters[2][1]);
+    favoritesFilterFunc(value) {
+      let yearResetConditionFavorites = (this.valueOfRangeFavorites[0][0] == this.borderValuesOfFilters[0][0]) &&
+                               (this.valueOfRangeFavorites[0][1] == this.borderValuesOfFilters[0][1]);
+      let ratingResetConditionFavorites = (this.valueOfRangeFavorites[1][0] == this.borderValuesOfFilters[1][0]) &&
+                                 (this.valueOfRangeFavorites[1][1]  == this.borderValuesOfFilters[1][1]);
+      let lengthResetConditionFavorites = (this.valueOfRangeFavorites[2][0] == this.borderValuesOfFilters[2][0]) && 
+                                 (this.valueOfRangeFavorites[2][1] == this.borderValuesOfFilters[2][1]);
 
-      let yearTrueCondition = (value.year >= this.valueOfRangeFavorites[0][0]) &&
+      if(yearResetConditionFavorites && ratingResetConditionFavorites && lengthResetConditionFavorites) { 
+        this.favorites = JSON.parse(localStorage.getItem("favorites")); 
+      }
+
+      let yearTrueConditionFavorites = (value.year >= this.valueOfRangeFavorites[0][0]) &&
                               (value.year <= this.valueOfRangeFavorites[0][1]);
-      let ratingTrueCondition = (value.rating.kp >= this.valueOfRangeFavorites[1][0]) &&
+      let ratingTrueConditionFavorites = (value.rating.kp >= this.valueOfRangeFavorites[1][0]) &&
                                 (value.rating.kp  <= this.valueOfRangeFavorites[1][1]);
-      let lengthTrueCondition = (value.movieLength >= this.valueOfRangeFavorites[2][0]) &&
+      let lengthTrueConditionFavorites = (value.movieLength >= this.valueOfRangeFavorites[2][0]) &&
                                 (value.movieLength <= this.valueOfRangeFavorites[2][1]);
-      return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
+      return (yearTrueConditionFavorites && ratingTrueConditionFavorites && lengthTrueConditionFavorites)
     },
 
     filterInit(){
@@ -259,14 +265,13 @@ export const useFilmStore = defineStore('filmStorage', {
         this.results = true;
       }
       this.currentPage = 1;
-
       this.sortType(this.sortChoice);
       this.updatePage();
     },
 
     favoritesFilterInit() {
       this.favorites = JSON.parse(localStorage.getItem("favorites")); 
-      this.favorites = this.favorites.filter(this.favoriteFilterFunc);
+      this.favorites = this.favorites.filter(this.favoritesFilterFunc);
     },
 
     backToSearch() {
@@ -304,7 +309,7 @@ export const useFilmStore = defineStore('filmStorage', {
       }
     },
 
-    removeFroFavorites(filmData) {
+    removeFromFavorites(filmData) {
       let updatedStorage = JSON.parse(localStorage.getItem("favorites")); //обновляем (удаляем элемент) список закладок
       let tempName = filmData.name;
       updatedStorage = updatedStorage.filter(item => item.name !== tempName);
@@ -321,10 +326,13 @@ export const useFilmStore = defineStore('filmStorage', {
       let ratingsFavorite = [];
       let lengthsFavorite = [];
       for(let i = 0; i < this.favorites.length; i++) { 
-        yearsFavorite[i] = this.filmDataStorage[i].year;
-        ratingsFavorite[i] = this.filmDataStorage[i].rating.kp;
-        lengthsFavorite[i] = this.filmDataStorage[i].movieLength;
+        yearsFavorite[i] = this.favorites[i].year;
+        ratingsFavorite[i] = this.favorites[i].rating.kp;
+        lengthsFavorite[i] = this.favorites[i].movieLength;
       }
+      console.log(yearsFavorite);
+      console.log(ratingsFavorite);
+      console.log(lengthsFavorite);
       this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
       router.push('/favorites');
@@ -369,6 +377,5 @@ export const useFilmStore = defineStore('filmStorage', {
 
 // на 02.04:
 // 1) картинки не оч 
-// 2) ошибка при фильтрации не на первой странице (кнопка сброса работает некорректно)
 // 3) ошибка при фильтрации на странице закладок
 

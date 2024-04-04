@@ -61,7 +61,7 @@
                  title="Удалить из закладок"
                  variant="plain"
                  color="error"
-                 @click="FilmStore.removeFroFavorites(favorite)">
+                 @click="FilmStore.removeFromFavorites(favorite)">
                 </v-btn>           
             </div>
             <div class="ml-4">
