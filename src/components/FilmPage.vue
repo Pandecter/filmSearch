@@ -227,7 +227,7 @@
                      
                 </v-card-text>
                 <v-img
-                 :min-width="300"
+                 min-width="300"
                  cover
                  :src="filmData.poster.url">
                 </v-img>

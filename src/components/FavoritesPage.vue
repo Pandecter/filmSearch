@@ -6,7 +6,7 @@
                 <div class="d-flex justify-center">
                     <v-card
                     max-width="400"
-                    text="Переход на главную страницу приведет к сбросу фильтров для закладок. Вы хотите перейти?"
+                    text="Переход на главную страницу приведет к сбросу фильтров для закладок. Вы точно хотите перейти?"
                     title="Внимание!"
                     >
                         <div class="d-flex">
@@ -30,7 +30,8 @@
              variant="plain"
              title="Фильтрация"
              id="filter-activator"
-            >   <v-icon icon="mdi-filter-outline"></v-icon>
+            >   <v-icon icon="mdi-filter-outline"
+                size="x-large"></v-icon>
                 <v-menu   
                  activator="#filter-activator"
                  location="start" 
@@ -114,7 +115,8 @@
                     </v-icon>
                 </p>
             </div>
-                <v-img 
+                <v-img
+                 height="350"
                  :src="favorite.poster.url"
                  gradient="to top, rgba(255, 255, 255,.5), rgba(0, 0, 0,.7)"
                  cover>

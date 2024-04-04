@@ -407,19 +407,10 @@ export const useFilmStore = defineStore('filmStorage', {
       }
       return this.filmNames;
     },
-
-    // getFavorites() {
-    //   return this.selectedFilms.filter((el) => el.isFavorite === true);
-    // },
-
-    // returnButtonName() {
-    //   return this.favButtonValue = this.favButtonValue === "Добавить в закладки" ? "Добавлено" : "Добавить в закладки";
-    // }
-  
   }
 })
 
 // на 02.04:
 // 1) картинки не оч 
-// 3) ошибка при фильтрации на странице закладок
+
 
