@@ -2,8 +2,29 @@
     <v-app>
         <v-app-bar>
             <v-btn @click="FilmStore.toMainPage()" variant="flat" color="error"> Назад </v-btn>
-            <div class="d-flex justify-center w-100 mr-10">
-                <v-app-title class="text-h5"> Избранное </v-app-title>
+            <v-dialog v-model="FilmStore.dialog">
+                <div class="d-flex justify-center">
+                    <v-card
+                    max-width="400"
+                    text="Переход на главную страницу приведет к сбросу фильтров для закладок. Вы хотите перейти?"
+                    title="Внимание!"
+                    >
+                        <div class="d-flex">
+                            <v-btn class="w-50" 
+                            @click="FilmStore.dialog = false"
+                            color="error">
+                                Отмена
+                            </v-btn>
+                            <v-btn class="w-50"
+                            @click="FilmStore.fromDialogToMainPage()">
+                                Перейти
+                            </v-btn>
+                         </div>
+                    </v-card>
+                </div>     
+            </v-dialog>      
+            <div class="d-flex justify-center w-100 mr-8">
+                <p class="text-h5"> Избранное </p>
             </div>
             <v-btn 
              variant="plain"
@@ -39,13 +60,28 @@
                         </v-list>
                         <div>
                             <v-btn rounded="0" class="w-50" color="error" @click="FilmStore.restartFavoritesFilter()">Сбросить</v-btn>
-                            <v-btn rounded="0" class="w-50" variant="elevated" color="accept" @click="FilmStore.favoritesFilterInit()">Применить</v-btn>
+                            <v-btn rounded="0"
+                             class="w-50"
+                             variant="elevated" 
+                             color="accept" 
+                             @click="FilmStore.favoritesFilterInit()"
+                             id="tooltip-activator"
+                            >
+                                Применить
+                            </v-btn>
                         </div>
                     </v-sheet>
+                    <v-tooltip
+                     activator="#tooltip-activator"
+                     location="bottom">
+                        Во время фильтрации нельзя удалять закладки!
+                    </v-tooltip>
                 </v-menu>
             </v-btn>
         </v-app-bar>
-        <v-container class="d-flex flex-row flex-wrap justify-space-around mt-16">
+        <v-container v-if="FilmStore.favoritesResults"
+         class="d-flex flex-row flex-wrap justify-space-around mt-16"
+        > 
             <v-card v-for="favorite in FilmStore.favorites"
              :key="favorite.id"
              class="mt-8"
@@ -57,11 +93,15 @@
                 <v-card-text class="text-truncate text-h6" :title="favorite.name">
                     {{ favorite.name }}
                 </v-card-text>
-                <v-btn icon="mdi-close-thick"
+                <v-btn 
                  title="Удалить из закладок"
                  variant="plain"
                  color="error"
-                 @click="FilmStore.removeFromFavorites(favorite)">
+                 :disabled="FilmStore.favoritesInFilterMode"
+                 @click="FilmStore.removeFromFavorites(favorite)"
+                 class="mt-2 pl-8"
+                >
+                 <v-icon icon="mdi-close-thick"></v-icon>
                 </v-btn>           
             </div>
             <div class="ml-4">
@@ -89,8 +129,12 @@
                         </div>  
                     </div>
                 </v-img>
-
             </v-card>
+        </v-container>
+        <v-container v-else class=" h-100 d-flex justify-center align-center text-h3">
+            <p>
+                Нет результатов
+            </p>
         </v-container>
     </v-app>
 </template>

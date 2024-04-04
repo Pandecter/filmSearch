@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import filmData from '../../dataset/kinopoisk-1.json'
 import router from '@/router'
 
-//const STORE_NAME = 'main';
-
 export const useFilmStore = defineStore('filmStorage', {
   state: () => {
     return {
@@ -26,11 +24,14 @@ export const useFilmStore = defineStore('filmStorage', {
       valueOfRangeFavorites: [],
       borderValuesOfFilters: [],
       inFilterMode: false,
+      favoritesInFilterMode: false,
+      dialog: false,
       searchMode: true,
       sortChoice: [null, null], // где [0] - по-возрастанию, [1] - по-убыванию,
       favButtonValue: "Добавить в закладки",
       favorites: [],
       results: true,
+      favoritesResults: true,
       ascBut: [false, false, false],
       desBut: [false, false, false] 
       // favs.find((film) => film.id === id): [
@@ -124,6 +125,8 @@ export const useFilmStore = defineStore('filmStorage', {
     borderMaker(years, ratings, lengths) {
       let arrForBorders = [];
 
+      this.borderValuesOfFilters.length = 0; //необходимо, чтоб массив при переходе со страницы на страницу бесконечно не заполнялся
+
       this.borderValuesOfFilters.push(arrForBorders.slice());
       this.borderValuesOfFilters[0][0] = Math.min.apply(Math, years);
       this.borderValuesOfFilters[0][1] = Math.max.apply(Math, years);
@@ -200,6 +203,8 @@ export const useFilmStore = defineStore('filmStorage', {
     restartFavoritesFilter() {
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
       this.favorites = JSON.parse(localStorage.getItem("favorites"));
+      this.favoritesInFilterMode = false;
+      this.favoritesResults = true;
     },
 
     updatePage() {
@@ -244,6 +249,10 @@ export const useFilmStore = defineStore('filmStorage', {
 
       if(yearResetConditionFavorites && ratingResetConditionFavorites && lengthResetConditionFavorites) { 
         this.favorites = JSON.parse(localStorage.getItem("favorites")); 
+        this.favoritesInFilterMode = false;
+      }
+      else {
+        this.favoritesInFilterMode = true;
       }
 
       let yearTrueConditionFavorites = (value.year >= this.valueOfRangeFavorites[0][0]) &&
@@ -272,6 +281,12 @@ export const useFilmStore = defineStore('filmStorage', {
     favoritesFilterInit() {
       this.favorites = JSON.parse(localStorage.getItem("favorites")); 
       this.favorites = this.favorites.filter(this.favoritesFilterFunc);
+      if(this.favorites.length === 0) {
+        this.favoritesResults = false;
+      }
+      else {
+        this.favoritesResults = true;
+      }
     },
 
     backToSearch() {
@@ -297,6 +312,7 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     moveToFavorites(filmData) {
+      //this.favoritesBorderChanger();
       if(!(this.favorites.find((el) => el.id === filmData.id))) {
         filmData.isFavorite = true;
         this.favorites.push(filmData);
@@ -307,6 +323,7 @@ export const useFilmStore = defineStore('filmStorage', {
         this.favorites[index].filmRating = filmData.filmRating;
         localStorage.setItem("favorites", JSON.stringify(this.favorites));
       }
+      this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
     },
 
     removeFromFavorites(filmData) {
@@ -319,9 +336,48 @@ export const useFilmStore = defineStore('filmStorage', {
       this.filmDataStorage[index].filmRating = 0;
       this.filmDataStorage[index].isFavorite = false;
       this.favorites = this.favorites.filter(item => item.name !== tempName);
+      this.favoritesBorderChanger();
+      this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
     },
 
     toFavoritesPage() {
+      // let yearsFavorite = [];
+      // let ratingsFavorite = [];
+      // let lengthsFavorite = [];
+      // for(let i = 0; i < this.favorites.length; i++) { 
+      //   yearsFavorite[i] = this.favorites[i].year;
+      //   ratingsFavorite[i] = this.favorites[i].rating.kp;
+      //   lengthsFavorite[i] = this.favorites[i].movieLength;
+      // }
+      // this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
+      this.favoritesBorderChanger();
+      if(this.valueOfRangeFavorites.length === 0) {
+        
+        this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
+      }
+      router.push('/favorites');
+    },
+
+    toMainPage() {
+      if(this.favoritesInFilterMode) {
+        this.dialog = true;
+      }
+      else{
+        this.dialog = false;
+        router.push('/');
+        let arrOfYears = [];
+        let arrOfRating = [];
+        let arrOfLength = [];
+        for(let i = 0; i < this.filmDataStorage.length; i++) { 
+          arrOfYears[i] = this.filmDataStorage[i].year;
+          arrOfRating[i] = this.filmDataStorage[i].rating.kp;
+          arrOfLength[i] = this.filmDataStorage[i].movieLength;
+        }
+        this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
+      }
+    },
+    
+    favoritesBorderChanger() {
       let yearsFavorite = [];
       let ratingsFavorite = [];
       let lengthsFavorite = [];
@@ -330,25 +386,13 @@ export const useFilmStore = defineStore('filmStorage', {
         ratingsFavorite[i] = this.favorites[i].rating.kp;
         lengthsFavorite[i] = this.favorites[i].movieLength;
       }
-      console.log(yearsFavorite);
-      console.log(ratingsFavorite);
-      console.log(lengthsFavorite);
       this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
-      this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
-      router.push('/favorites');
     },
 
-    toMainPage() {
-      let arrOfYears = [];
-      let arrOfRating = [];
-      let arrOfLength = [];
-      for(let i = 0; i < this.filmDataStorage.length; i++) { 
-        arrOfYears[i] = this.filmDataStorage[i].year;
-        arrOfRating[i] = this.filmDataStorage[i].rating.kp;
-        arrOfLength[i] = this.filmDataStorage[i].movieLength;
-      }
-      this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
+    fromDialogToMainPage() {
       router.push('/');
+      this.restartFavoritesFilter();
+      this.dialog = false;
     }
   },
   getters: {

@@ -1,8 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <div class="ml-16 pl-10 w-100 d-flex justify-center"
-      :color="red">
+      <div class="ml-16 pl-10 w-100 d-flex justify-center">
         <p class="ml-16 pl-16 pr-2 text-h5">Поиск Кино</p>
         <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"></v-icon>
       </div>
