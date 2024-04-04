@@ -34,12 +34,6 @@ export const useFilmStore = defineStore('filmStorage', {
       favoritesResults: true,
       ascBut: [false, false, false],
       desBut: [false, false, false] 
-      // favs.find((film) => film.id === id): [
-      //   {
-      //     film: "obj",
-      //     rating: 5, 
-      //   },
-      // ]
     }
   },
   actions : {
@@ -47,7 +41,6 @@ export const useFilmStore = defineStore('filmStorage', {
       let arrOfYears = [];
       let arrOfRating = [];
       let arrOfLength = [];
-      //let arrForBorders = [];
       let tempArr = []; 
 
       this.filmDataStorage = [...filmData.docs] //изначальный массив, взятый с JSON, над которым проводятся действия
@@ -82,13 +75,9 @@ export const useFilmStore = defineStore('filmStorage', {
         }
       } 
 
-      //console.log(tempArr);
-
       if(this.favorites !== null) { //если есть данные с localStorage
-        //console.log(this.favorites.length)
         for(let i = 0; i < this.favorites.length; i++) {
           let index = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
-          //console.log(this.favorites[i])
           this.filmDataStorage[index] = this.favorites[i];
         }
       }
@@ -103,18 +92,6 @@ export const useFilmStore = defineStore('filmStorage', {
       }
 
       this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
-
-      // this.borderValuesOfFilters.push(arrForBorders.slice());
-      // this.borderValuesOfFilters[0][0] = Math.min.apply(Math, arrOfYears);
-      // this.borderValuesOfFilters[0][1] = Math.max.apply(Math, arrOfYears);
-
-      // this.borderValuesOfFilters.push(arrForBorders.slice());
-      // this.borderValuesOfFilters[1][0] = Math.min.apply(Math, arrOfRating);
-      // this.borderValuesOfFilters[1][1] = Math.max.apply(Math, arrOfRating);
-
-      // this.borderValuesOfFilters.push(arrForBorders.slice());
-      // this.borderValuesOfFilters[2][0] = Math.min.apply(Math, arrOfLength);
-      // this.borderValuesOfFilters[2][1] = Math.max.apply(Math, arrOfLength);
 
       this.valuesOfRange = [...this.borderValuesOfFilters];
 
@@ -138,8 +115,6 @@ export const useFilmStore = defineStore('filmStorage', {
       this.borderValuesOfFilters.push(arrForBorders.slice());
       this.borderValuesOfFilters[2][0] = Math.min.apply(Math, lengths);
       this.borderValuesOfFilters[2][1] = Math.max.apply(Math, lengths);
-
-      //this.valuesOfRange = [...this.borderValuesOfFilters]
     },
   
     filmResult() {
@@ -153,7 +128,6 @@ export const useFilmStore = defineStore('filmStorage', {
           break;
         }
       }
-      
     },
 
     ascendingSort(choice) {
@@ -183,7 +157,13 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     restartSort() {
-      this.selectedFilms = [...this.filmDataStorage];
+      if(this.inFilterMode === true){
+        this.selectedFilms = [...this.filmDataStorage];
+        this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
+      }
+      else {
+        this.selectedFilms = [...this.filmDataStorage];
+      }
       this.sortChoice[0] = null;
       this.sortChoice[1] = null;
       this.desBut.fill(false);
@@ -312,7 +292,6 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     moveToFavorites(filmData) {
-      //this.favoritesBorderChanger();
       if(!(this.favorites.find((el) => el.id === filmData.id))) {
         filmData.isFavorite = true;
         this.favorites.push(filmData);
@@ -341,15 +320,6 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     toFavoritesPage() {
-      // let yearsFavorite = [];
-      // let ratingsFavorite = [];
-      // let lengthsFavorite = [];
-      // for(let i = 0; i < this.favorites.length; i++) { 
-      //   yearsFavorite[i] = this.favorites[i].year;
-      //   ratingsFavorite[i] = this.favorites[i].rating.kp;
-      //   lengthsFavorite[i] = this.favorites[i].movieLength;
-      // }
-      // this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
       this.favoritesBorderChanger();
       if(this.valueOfRangeFavorites.length === 0) {
         
@@ -410,7 +380,5 @@ export const useFilmStore = defineStore('filmStorage', {
   }
 })
 
-// на 02.04:
-// 1) картинки не оч 
 
 
