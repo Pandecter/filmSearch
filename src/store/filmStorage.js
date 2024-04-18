@@ -50,39 +50,39 @@ export const useFilmStore = defineStore('filmStorage', {
         (a.rating.kp > b.rating.kp) ? 1 : (b.rating.kp > a.rating.kp) ? -1 : 0
       );
 
-      for(let i = 0; i < this.filmDataStorage.length; i++) {
+      for (let i = 0; i < this.filmDataStorage.length; i++) {
         let filmId = this.filmDataStorage[i].id;
         this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
         this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
         this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
-        let index = tempArr.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
+        const INDEX = tempArr.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
 
-        for(let j = 0; j < 4; j++) { 
-          if(index >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
+        for (let j = 0; j < 4; j++) { 
+          if (INDEX >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
             this.filmDataStorage[i].similarFilms[j] = tempArr[this.filmDataStorage.length - (2 + j)];
           }
-          else if(index <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 4 фильма
+          else if (INDEX <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 4 фильма
             this.filmDataStorage[i].similarFilms[j] = tempArr[2 + j];
           }
           else {
             if(j <= 1) { //2 фильма ДО 
-              this.filmDataStorage[i].similarFilms[j] = tempArr[index - 1 - j];
+              this.filmDataStorage[i].similarFilms[j] = tempArr[INDEX - 1 - j];
             }
             else { //2 фильма ПОСЛЕ
-              this.filmDataStorage[i].similarFilms[j] = tempArr[index - 1 + j];
+              this.filmDataStorage[i].similarFilms[j] = tempArr[INDEX - 1 + j];
             }
           }
         }
       } 
 
-      if(this.favorites !== null) { //если есть данные с localStorage
-        for(let i = 0; i < this.favorites.length; i++) {
-          let index = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
-          this.filmDataStorage[index] = this.favorites[i];
+      if (this.favorites !== null) { //если есть данные с localStorage
+        for (let i = 0; i < this.favorites.length; i++) {
+          let INDEX = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
+          this.filmDataStorage[INDEX] = this.favorites[i];
         }
       }
 
-      for(let i = 0; i < this.filmDataStorage.length; i++) { 
+      for (let i = 0; i < this.filmDataStorage.length; i++) { 
         this.selectedFilms[i] = this.filmDataStorage[i]; 
         this.selectedFilms[i].rating.kp =  Number(this.selectedFilms[i].rating.kp).toFixed(1);
 
@@ -120,8 +120,8 @@ export const useFilmStore = defineStore('filmStorage', {
     filmResult() { //выводит результат поиска фильма
       this.searchMode = false;
       this.selectedFilms.length = 0;
-      for(let i = 0; i < this.filmDataStorage.length; i++){
-        if(this.filmDataStorage[i].name == this.curName) {
+      for (let i = 0; i < this.filmDataStorage.length; i++) {
+        if (this.filmDataStorage[i].name == this.curName) {
           this.selectedFilms.push(this.filmDataStorage[i]);
           this.currentPage = 1;
           this.updatePage();
@@ -137,7 +137,7 @@ export const useFilmStore = defineStore('filmStorage', {
       this.sortChoice[0] = choice;
       this.sortChoice[1] = null;  
       let field = this.arrOfFields[choice];
-      if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
+      if (choice == 1) { // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
         this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? 1 : ((b[field].kp > a[field].kp) ? -1 : 0))
       }
       this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
@@ -150,14 +150,14 @@ export const useFilmStore = defineStore('filmStorage', {
       this.sortChoice[0] = null;
       this.sortChoice[1] = choice;
       let field = this.arrOfFields[choice];
-      if(choice == 1){ // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
+      if (choice == 1) { // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
         this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? -1 : ((b[field].kp > a[field].kp) ? 1 : 0))
       }
       this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? -1 : ((b[field] > a[field]) ? 1 : 0))
     },
 
     restartSort() { //сброс сортровки
-      if(this.inFilterMode === true){ 
+      if (this.inFilterMode === true) { 
         this.selectedFilms = [...this.filmDataStorage];
         this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
       }
@@ -194,21 +194,14 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     filterFunc(value) { //метод фильтрации для главной страницы
-      let yearResetCondition = (this.valuesOfRange[0][0] == this.borderValuesOfFilters[0][0]) &&
+      const YEAR_RESET_CONDITION = (this.valuesOfRange[0][0] == this.borderValuesOfFilters[0][0]) &&
                                (this.valuesOfRange[0][1] == this.borderValuesOfFilters[0][1]);
-      let ratingResetCondition = (this.valuesOfRange[1][0] == this.borderValuesOfFilters[1][0]) &&
+      const RATING_RESET_CONDITION = (this.valuesOfRange[1][0] == this.borderValuesOfFilters[1][0]) &&
                                  (this.valuesOfRange[1][1]  == this.borderValuesOfFilters[1][1]);
-      let lengthResetCondition = (this.valuesOfRange[2][0] == this.borderValuesOfFilters[2][0]) && 
+      const LENGTH_RESET_CONDITION = (this.valuesOfRange[2][0] == this.borderValuesOfFilters[2][0]) && 
                                  (this.valuesOfRange[2][1] == this.borderValuesOfFilters[2][1]);
 
-      let yearTrueCondition = (value.year >= this.valuesOfRange[0][0]) &&
-                              (value.year <= this.valuesOfRange[0][1]);
-      let ratingTrueCondition = (value.rating.kp >= this.valuesOfRange[1][0]) &&
-                                (value.rating.kp  <= this.valuesOfRange[1][1]);
-      let lengthTrueCondition = (value.movieLength >= this.valuesOfRange[2][0]) &&
-                                (value.movieLength <= this.valuesOfRange[2][1]);
-
-      if(yearResetCondition && ratingResetCondition && lengthResetCondition) { //условие прекращения фильтрации
+      if (YEAR_RESET_CONDITION && RATING_RESET_CONDITION && LENGTH_RESET_CONDITION) { //условие прекращения фильтрации
         this.inFilterMode = false;
         this.currentPage = 1;
         this.updatePage();
@@ -216,18 +209,25 @@ export const useFilmStore = defineStore('filmStorage', {
       else { // условие начала фильтрации (необходимо для корректной работы поиска)
         this.inFilterMode = true;
       }
-      return (yearTrueCondition && ratingTrueCondition && lengthTrueCondition)
+
+      const YEAR_TRUE_CONDITION = (value.year >= this.valuesOfRange[0][0]) &&
+                              (value.year <= this.valuesOfRange[0][1]);
+      const RATING_TRUE_CONDITION = (value.rating.kp >= this.valuesOfRange[1][0]) &&
+                                (value.rating.kp  <= this.valuesOfRange[1][1]);
+      const LENGTH_TRUE_CONDITION = (value.movieLength >= this.valuesOfRange[2][0]) &&
+                                (value.movieLength <= this.valuesOfRange[2][1]);
+      return (YEAR_TRUE_CONDITION && RATING_TRUE_CONDITION && LENGTH_TRUE_CONDITION)
     },
 
     favoritesFilterFunc(value) { //метод фильтрации для закладок (т. к. переменная другая)
-      let yearResetConditionFavorites = (this.valueOfRangeFavorites[0][0] == this.borderValuesOfFilters[0][0]) &&
+      const YEAR_RESET_CONDITION_FAVORITES = (this.valueOfRangeFavorites[0][0] == this.borderValuesOfFilters[0][0]) &&
                                (this.valueOfRangeFavorites[0][1] == this.borderValuesOfFilters[0][1]);
-      let ratingResetConditionFavorites = (this.valueOfRangeFavorites[1][0] == this.borderValuesOfFilters[1][0]) &&
+      const RATING_RESET_CONDITION_FAVORITES = (this.valueOfRangeFavorites[1][0] == this.borderValuesOfFilters[1][0]) &&
                                  (this.valueOfRangeFavorites[1][1]  == this.borderValuesOfFilters[1][1]);
-      let lengthResetConditionFavorites = (this.valueOfRangeFavorites[2][0] == this.borderValuesOfFilters[2][0]) && 
+      const LENGTH_RESET_CONDITION_FAVORITES = (this.valueOfRangeFavorites[2][0] == this.borderValuesOfFilters[2][0]) && 
                                  (this.valueOfRangeFavorites[2][1] == this.borderValuesOfFilters[2][1]);
 
-      if(yearResetConditionFavorites && ratingResetConditionFavorites && lengthResetConditionFavorites) { 
+      if (YEAR_RESET_CONDITION_FAVORITES && RATING_RESET_CONDITION_FAVORITES && LENGTH_RESET_CONDITION_FAVORITES) { 
         this.favorites = JSON.parse(localStorage.getItem("favorites")); 
         this.favoritesInFilterMode = false;
       }
@@ -235,19 +235,19 @@ export const useFilmStore = defineStore('filmStorage', {
         this.favoritesInFilterMode = true;
       }
 
-      let yearTrueConditionFavorites = (value.year >= this.valueOfRangeFavorites[0][0]) &&
+      const YEAR_TRUE_CONDITION_FAVORITES = (value.year >= this.valueOfRangeFavorites[0][0]) &&
                               (value.year <= this.valueOfRangeFavorites[0][1]);
-      let ratingTrueConditionFavorites = (value.rating.kp >= this.valueOfRangeFavorites[1][0]) &&
+      const RATING_TRUE_CONDITION_FAVORITES = (value.rating.kp >= this.valueOfRangeFavorites[1][0]) &&
                                 (value.rating.kp  <= this.valueOfRangeFavorites[1][1]);
-      let lengthTrueConditionFavorites = (value.movieLength >= this.valueOfRangeFavorites[2][0]) &&
+      const LENGTH_TRUE_CONDITION_FAVORITES = (value.movieLength >= this.valueOfRangeFavorites[2][0]) &&
                                 (value.movieLength <= this.valueOfRangeFavorites[2][1]);
-      return (yearTrueConditionFavorites && ratingTrueConditionFavorites && lengthTrueConditionFavorites)
+      return (YEAR_TRUE_CONDITION_FAVORITES && RATING_TRUE_CONDITION_FAVORITES && LENGTH_TRUE_CONDITION_FAVORITES)
     },
 
     filterInit(){ //вызов фильтрации для главной страницы
       this.selectedFilms = [...this.filmDataStorage];
       this.selectedFilms = this.selectedFilms.filter(this.filterFunc);
-      if(this.selectedFilms.length === 0) {
+      if (this.selectedFilms.length === 0) {
         this.results = false;
       }
       else {
@@ -261,7 +261,7 @@ export const useFilmStore = defineStore('filmStorage', {
     favoritesFilterInit() { //вызов фильтрации для закладок
       this.favorites = JSON.parse(localStorage.getItem("favorites")); 
       this.favorites = this.favorites.filter(this.favoritesFilterFunc);
-      if(this.favorites.length === 0) {
+      if (this.favorites.length === 0) {
         this.favoritesResults = false;
       }
       else {
@@ -271,7 +271,7 @@ export const useFilmStore = defineStore('filmStorage', {
 
     backToSearch() { //метод, который позволяет вернуться к поиску фильмов
       this.curName = null;
-      if(this.inFilterMode == true) {
+      if (this.inFilterMode == true) {
         this.filterInit();
       }
       else {
@@ -283,7 +283,7 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     sortType(arrayOfChoices) { //функция вызова одной из сортировок
-      if(arrayOfChoices[0] == null) { 
+      if (arrayOfChoices[0] == null) { 
         this.descendingSort(arrayOfChoices[1]);
       }
       else {
@@ -292,7 +292,7 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     moveToFavorites(filmData) { //метод, который добавляет фильм в закладки
-      if(!(this.favorites.find((el) => el.id === filmData.id))) {
+      if (!(this.favorites.find((el) => el.id === filmData.id))) {
         filmData.isFavorite = true;
         this.favorites.push(filmData);
         localStorage.setItem("favorites", JSON.stringify(this.favorites));
@@ -321,15 +321,14 @@ export const useFilmStore = defineStore('filmStorage', {
 
     toFavoritesPage() { //метод, который позволяет перейти к странице закладок и сформировать границы
       this.favoritesBorderChanger();
-      if(this.valueOfRangeFavorites.length === 0) {
-        
+      if (this.valueOfRangeFavorites.length === 0) {
         this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
       }
       router.push('/favorites');
     },
 
     toMainPage() { //метод, который позволяет перейти к основной странице и сформировать границы
-      if(this.favoritesInFilterMode) {
+      if (this.favoritesInFilterMode) {
         this.dialog = true;
       }
       else{
@@ -338,7 +337,7 @@ export const useFilmStore = defineStore('filmStorage', {
         let arrOfYears = [];
         let arrOfRating = [];
         let arrOfLength = [];
-        for(let i = 0; i < this.filmDataStorage.length; i++) { 
+        for (let i = 0; i < this.filmDataStorage.length; i++) { 
           arrOfYears[i] = this.filmDataStorage[i].year;
           arrOfRating[i] = this.filmDataStorage[i].rating.kp;
           arrOfLength[i] = this.filmDataStorage[i].movieLength;
@@ -351,7 +350,7 @@ export const useFilmStore = defineStore('filmStorage', {
       let yearsFavorite = [];
       let ratingsFavorite = [];
       let lengthsFavorite = [];
-      for(let i = 0; i < this.favorites.length; i++) { 
+      for (let i = 0; i < this.favorites.length; i++) { 
         yearsFavorite[i] = this.favorites[i].year;
         ratingsFavorite[i] = this.favorites[i].rating.kp;
         lengthsFavorite[i] = this.favorites[i].movieLength;
@@ -372,13 +371,10 @@ export const useFilmStore = defineStore('filmStorage', {
 
     filmNamesList() { //показывает названия фильмов в v-autocomplete
       this.filmNames.length = 0;
-      for (let i = 0; i < this.selectedFilms.length; i++){
+      for (let i = 0; i < this.selectedFilms.length; i++) {
         this.filmNames.push(this.selectedFilms[i].name);
       }
       return this.filmNames;
     },
   }
 })
-
-
-

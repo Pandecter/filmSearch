@@ -1,6 +1,6 @@
 <template>
-  <AppBar/>
-  <FilmPage/>
+  <AppBar />
+  <FilmPage />
 </template>
 
 <script setup>
