@@ -27,26 +27,35 @@
     </v-app-bar>
   </v-app>
 </template>
-
+<!-- 
 <script setup>
   import { useTheme } from 'vuetify/lib/framework.mjs';
+  import { useFilmStore } from '@/store/filmStorage';
 
   const theme = useTheme();
-
+  const FilmStore = useFilmStore();
   const toggleTheme = () => {
     theme.global.name.value = theme.global.name.value === 'dark' ? 'light' : 'dark';
   }
-</script>
+
+
+</script> -->
 
 <script>
   import { useFilmStore } from "@/store/filmStorage"
-
+  import {useTheme} from 'vuetify/lib/framework.mjs'
   export default {
     data() {
       return {
-        FilmStore: useFilmStore()
+        FilmStore: useFilmStore(),
+        theme: useTheme(),
       }
   },
+  methods: {
+    toggleTheme() {
+      this.theme.global.name = this.theme.global.name === 'dark' ? 'light' : 'dark';
+    }
+  }
 }
 </script>
 

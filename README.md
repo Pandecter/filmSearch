@@ -1,3 +1,6 @@
+# ИНСТРУКЦИЯ ПО СБОРКЕ
+1. 
+
 # default
 
 ## Project setup
