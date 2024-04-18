@@ -5,41 +5,31 @@
         <p class="ml-16 pl-16 pr-2 text-h5">
           Поиск Кино
         </p>
-        <v-icon icon="mdi-movie-search-outline" size="x-large" class="myIcon"/>
+        <v-icon 
+          icon="mdi-movie-search-outline" 
+          size="x-large" 
+        />
       </div>
       <div class="d-flex justify-end">
         <v-btn 
-         variant="outlined" 
-         title="Избранное" 
-         class="mr-8"
-         @click="FilmStore.toFavoritesPage()" 
+          variant="outlined" 
+          title="Избранное" 
+          class="mr-8"
+          @click="filmStore.toFavoritesPage()" 
         >
           Закладки
         </v-btn>
         <v-btn  
-         title="Сменить тему" 
-         class="mr-4"
-         @click="toggleTheme"
+          title="Сменить тему" 
+          class="mr-4"
+          @click="toggleTheme"
         >
-          <v-icon icon="mdi-invert-colors"/>
+          <v-icon icon="mdi-invert-colors" />
         </v-btn>
       </div>
     </v-app-bar>
   </v-app>
 </template>
-<!-- 
-<script setup>
-  import { useTheme } from 'vuetify/lib/framework.mjs';
-  import { useFilmStore } from '@/store/filmStorage';
-
-  const theme = useTheme();
-  const FilmStore = useFilmStore();
-  const toggleTheme = () => {
-    theme.global.name.value = theme.global.name.value === 'dark' ? 'light' : 'dark';
-  }
-
-
-</script> -->
 
 <script>
   import { useFilmStore } from "@/store/filmStorage"
@@ -47,7 +37,7 @@
   export default {
     data() {
       return {
-        FilmStore: useFilmStore(),
+        filmStore: useFilmStore(),
         theme: useTheme(),
       }
   },
