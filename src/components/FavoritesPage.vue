@@ -2,9 +2,9 @@
   <v-app>
     <v-app-bar>
       <v-btn 
-       @click="FilmStore.toMainPage()" 
        variant="flat" 
        color="error"
+       @click="FilmStore.toMainPage()" 
       > 
         Назад 
       </v-btn>
@@ -18,8 +18,8 @@
             <div class="d-flex">
               <v-btn 
                class="w-50" 
-               @click="FilmStore.dialog = false"
                color="error"
+               @click="FilmStore.dialog = false"
               >
                 Отмена
               </v-btn>
@@ -70,21 +70,21 @@
               </v-list-item>
             </v-list>
             <div>
-              <v-btn 
+              <v-btn
+               class="w-50"  
                rounded="0" 
-               class="w-50" 
                color="error" 
                @click="FilmStore.restartFavoritesFilter()"
               >
                 Сбросить
               </v-btn>
-              <v-btn 
+              <v-btn
+               class="w-50" 
                rounded="0"
-               class="w-50"
                variant="elevated" 
                color="accept" 
-               @click="FilmStore.favoritesFilterInit()"
                id="tooltip-activator"
+               @click="FilmStore.favoritesFilterInit()"
               >
                 Применить
               </v-btn>
@@ -113,13 +113,13 @@
           <v-card-text class="text-truncate text-h6" :title="favorite.name">
             {{ favorite.name }}
           </v-card-text>
-          <v-btn 
+          <v-btn
+           class="mt-2 pl-8" 
            title="Удалить из закладок"
            variant="plain"
            color="error"
            :disabled="FilmStore.favoritesInFilterMode"
            @click="FilmStore.removeFromFavorites(favorite)"
-           class="mt-2 pl-8"
           >
             <v-icon icon="mdi-close-thick"/>
           </v-btn>           

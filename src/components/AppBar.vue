@@ -9,17 +9,17 @@
       </div>
       <div class="d-flex justify-end">
         <v-btn 
-         @click="FilmStore.toFavoritesPage()" 
          variant="outlined" 
          title="Избранное" 
          class="mr-8"
+         @click="FilmStore.toFavoritesPage()" 
         >
           Закладки
         </v-btn>
-        <v-btn 
-         @click="toggleTheme" 
+        <v-btn  
          title="Сменить тему" 
          class="mr-4"
+         @click="toggleTheme"
         >
           <v-icon icon="mdi-invert-colors"/>
         </v-btn>
