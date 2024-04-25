@@ -76,44 +76,55 @@
           class="mt-4 ml-4 mr-4" 
           :thickness="3"
         />
-        <p class="ml-4 mr-4 mt-4">
-          Оцените фильм
-        </p>
-        <v-rating
-          v-model="currentRating"
-          class="d-flex justify-center"
-          length="10"
-          size="80"
-          @click="changeRating(currentRating)"
-        />
-        <p class="ml-4 mr-4 mt-4">
-          Рекомендуем посмотреть
-        </p>
-        <div class="d-flex justify-space-around w-100 mt-4">
-          <div 
-            v-for="recommendedFilm in filmStore.similarFilms"
-            :key="recommendedFilm.id"
-          >   
-            <v-img 
-              class="ml-4"
-              :src="recommendedFilm.poster.url"
-              width="10vw"
-              height="20vh"
-              :title="recommendedFilm.name"
-              @click="updateCardInfo(recommendedFilm)"
-            />
+        <div v-if="!filmStore.favoritesInFilterMode">
+          <p class="ml-4 mr-4 mt-4">
+            Оцените фильм
+          </p>
+          <v-rating 
+            v-model="currentRating"
+            class="d-flex justify-center"
+            length="10"
+            size="80"
+            @click="changeRating(currentRating)"
+          />
+        </div>
+        <div 
+          v-else 
+          class="d-flex justify-center mt-16"
+        >
+          <p>Нельзя оценивать в режиме фильтрации</p>
+        </div>
+       
+        <div v-if="!filmStore.onFavorites">
+          <p class="ml-4 mr-4 mt-4">
+            Рекомендуем посмотреть
+          </p>
+          <div class="d-flex justify-space-around w-100 mt-4">
+            <div 
+              v-for="recommendedFilm in filmStore.similarFilms"
+              :key="recommendedFilm.id"
+            >   
+              <v-img 
+                class="ml-4"
+                :src="recommendedFilm.poster.url"
+                width="10vw"
+                height="20vh"
+                :title="recommendedFilm.name"
+                @click="updateCardInfo(recommendedFilm)"
+              />
+            </div>
           </div>
-        </div>
-        <div class="d-flex justify-center">
-          <v-btn 
-            class="mt-10 mb-4"
-            variant="outlined" 
-            :disabled="filmData.isFavorite"
-            @click="filmStore.moveToFavorites(filmData)"
-          > 
-            Добавить в закладки
-          </v-btn>
-        </div>
+          <div class="d-flex justify-center">
+            <v-btn 
+              class="mt-10 mb-4"
+              variant="outlined" 
+              :disabled="filmData.isFavorite"
+              @click="filmStore.moveToFavorites(filmData)"
+            > 
+              Добавить в закладки
+            </v-btn>
+          </div>
+        </div> 
       </div>  
     </v-sheet>
   </v-overlay>
@@ -133,7 +144,7 @@ export default {
   data() {
     return {
       filmStore: useFilmStore(),
-      currentRating: 0
+      currentRating: 0,
     }
   },
   watch: {

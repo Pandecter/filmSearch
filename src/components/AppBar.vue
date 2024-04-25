@@ -15,7 +15,7 @@
           variant="outlined" 
           title="Избранное" 
           class="mr-8"
-          @click="filmStore.toFavoritesPage()" 
+          @click="toFavorites()" 
         >
           Закладки
         </v-btn>
@@ -44,6 +44,11 @@
   methods: {
     toggleTheme() {
       this.theme.global.name = this.theme.global.name === 'dark' ? 'light' : 'dark';
+    },
+    toFavorites() {
+      this.$router.push('/favorites');
+      this.filmStore.favoritesPageBorderMaker();
+      this.filmStore.onFavorites = true;
     }
   }
 }

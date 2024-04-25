@@ -5,7 +5,7 @@
     fill-height
   >
     <extended-card-component 
-      :film-data="film ? film : filmStore.firstFilm"
+      :film-data="film"
       @change-rating="updateRating"
       @update-info="updateFilm"
     />

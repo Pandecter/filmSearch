@@ -34,8 +34,9 @@ export const useFilmStore = defineStore('filmStorage', {
       favorites: [], //массив фильмов, добавленных в закладки
       ascBut: [false, false, false], //необходимы для пометки кнопки конкретной сортировки как активной
       desBut: [false, false, false],
-      arrOfRecommended: [],
-      similarFilms: []
+      arrOfRecommended: [], //массив фильмов для рекомендаций
+      similarFilms: [], //массив рекомендаций для конкретного фильма, который формируется при нажатии 
+      onFavorites: false //необходим для отображения карточки фильма на странице поиска и в "избранное"
     }
   },
   actions : {
@@ -326,15 +327,15 @@ export const useFilmStore = defineStore('filmStorage', {
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
     },
 
-    toFavoritesPage() { //метод, который позволяет перейти к странице закладок и сформировать границы
+    favoritesPageBorderMaker() { //метод, который позволяет перейти к странице закладок и сформировать границы
       this.favoritesBorderChanger();
       if (this.valueOfRangeFavorites.length === 0) {
         this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
       }
-      router.push('/favorites');
     },
 
     toMainPage() { //метод, который позволяет перейти к основной странице и сформировать границы
+      this.onFavorites = false;
       if (this.favoritesInFilterMode) {
         this.dialog = true;
       }
@@ -383,9 +384,5 @@ export const useFilmStore = defineStore('filmStorage', {
       }
       return this.filmNames;
     },
-
-    firstFilm() {
-      return this.filmDataStorage[0];
-    }
   }
 })

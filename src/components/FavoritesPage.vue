@@ -111,7 +111,7 @@
       class="d-flex flex-row flex-wrap justify-space-around mt-16"
     >
       <extended-card-component 
-        :film-data="film ? film : filmStore.firstFilm"
+        :film-data="film"
         @change-rating="updateRatingInFavorites"
         @update-info="updateFilmInFavorites"
       /> 
@@ -137,7 +137,7 @@
             variant="plain"
             color="error"
             :disabled="filmStore.favoritesInFilterMode"
-            @click="filmStore.removeFromFavorites(favorite)"
+            @click.stop="filmStore.removeFromFavorites(favorite)"
           >
             <v-icon icon="mdi-close-thick" />
           </v-btn>           
@@ -185,6 +185,7 @@ import { useFilmStore } from "@/store/filmStorage"
 import ExtendedCardComponent from "./ExtendedCard.vue"
 
 export default {
+  
   components: {
 		ExtendedCardComponent
 	},
@@ -207,6 +208,6 @@ export default {
     favoritesInit(favorite) {
       this.film = favorite;
     }
-  }
+  },
 }
 </script>
