@@ -109,7 +109,12 @@
     <v-container 
       v-if="filmStore.favoritesResults"
       class="d-flex flex-row flex-wrap justify-space-around mt-16"
-    > 
+    >
+      <extended-card-component 
+        :film-data="film ? film : filmStore.firstFilm"
+        @change-rating="updateRatingInFavorites"
+        @update-info="updateFilmInFavorites"
+      /> 
       <v-card 
         v-for="favorite in filmStore.favorites"
         :key="favorite.id"
@@ -117,6 +122,7 @@
         width="250"
         heigth="350"
         variant="outlined"
+        @click="favoritesInit(favorite)"
       >
         <div class="d-flex justify-space-between">
           <v-card-text 
@@ -176,12 +182,31 @@
 
 <script>
 import { useFilmStore } from "@/store/filmStorage"
+import ExtendedCardComponent from "./ExtendedCard.vue"
 
 export default {
+  components: {
+		ExtendedCardComponent
+	},
   data() {
     return {
-      filmStore: useFilmStore()
+      filmStore: useFilmStore(),
+      film: {}
     }
   },
+  methods: {
+    updateRatingInFavorites(data) {
+      const INDEX = this.filmStore.filmDataStorage.findIndex((el) => el.id === data.id);
+			this.filmStore.filmDataStorage[INDEX].filmRating = data.rating;
+    },
+
+    updateFilmInFavorites(recommendedFilm) {
+      this.film = recommendedFilm;
+    },
+
+    favoritesInit(favorite) {
+      this.film = favorite;
+    }
+  }
 }
 </script>

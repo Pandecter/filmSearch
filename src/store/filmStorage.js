@@ -33,7 +33,9 @@ export const useFilmStore = defineStore('filmStorage', {
       favButtonValue: "Добавить в закладки", 
       favorites: [], //массив фильмов, добавленных в закладки
       ascBut: [false, false, false], //необходимы для пометки кнопки конкретной сортировки как активной
-      desBut: [false, false, false]
+      desBut: [false, false, false],
+      arrOfRecommended: [],
+      similarFilms: []
     }
   },
   actions : {
@@ -41,12 +43,12 @@ export const useFilmStore = defineStore('filmStorage', {
       let arrOfYears = [];
       let arrOfRating = [];
       let arrOfLength = [];
-      let tempArr = []; 
+      //let tempArr = []; 
 
       this.filmDataStorage = [...filmData.docs] //изначальный массив, взятый с JSON, над которым проводятся действия
 
       for (let i = 0; i < this.filmDataStorage.length; i++) {
-        this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
+        //this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
         this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
         this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
       }
@@ -58,32 +60,10 @@ export const useFilmStore = defineStore('filmStorage', {
         }
       }
       
-      tempArr = [...this.filmDataStorage] //создадим временный массив, который дополним полем рекомендованных фильмов
-      tempArr.sort((a,b) =>  //сортируем массив по трем полям, чтоб сформировать схожие по рейтингу фильмы по возрастанию
+      this.arrOfRecommended = [...this.filmDataStorage] //создадим временный массив, который дополним полем рекомендованных фильмов
+      this.arrOfRecommended.sort((a,b) =>  //сортируем массив по трем полям, чтоб сформировать схожие по рейтингу фильмы по возрастанию
         (a.rating.kp > b.rating.kp) ? 1 : (b.rating.kp > a.rating.kp) ? -1 : 0
       );
-
-      for (let i = 0; i < tempArr.length; i++) {
-        let filmId = this.filmDataStorage[i].id;
-        const INDEX = tempArr.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
-
-        for (let j = 0; j < 4; j++) { 
-          if (INDEX >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
-            this.filmDataStorage[i].similarFilms[j] = tempArr[this.filmDataStorage.length - (3 + j)];
-          }
-          else if (INDEX <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 4 фильма
-            this.filmDataStorage[i].similarFilms[j] = tempArr[2 + j];
-          }
-          else {
-            if(j <= 1) { //2 фильма ДО 
-              this.filmDataStorage[i].similarFilms[j] = tempArr[INDEX - 1 - j];
-            }
-            else { //2 фильма ПОСЛЕ
-              this.filmDataStorage[i].similarFilms[j] = tempArr[INDEX - 1 + j];
-            }
-          }
-        }
-      } 
 
       for (let i = 0; i < this.filmDataStorage.length; i++) { 
         this.selectedFilms[i] = this.filmDataStorage[i]; 
@@ -100,6 +80,30 @@ export const useFilmStore = defineStore('filmStorage', {
 
       this.end = this.countOfFilmsOnPage;
       this.updatePage();
+    },
+
+    makeRecommendedList(currentFilm) {
+        let filmId = currentFilm.id;
+        const INDEX = this.arrOfRecommended.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
+
+        for (let i = 0; i < 4; i++) { 
+          
+          if (INDEX >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
+            this.similarFilms[i] = this.arrOfRecommended[this.arrOfRecommended.length - (3 + i)];
+          }
+          else if (INDEX <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 4 фильма
+            this.similarFilms[i] = this.arrOfRecommended[2 + i];
+          }
+          else {
+            if(i <= 1) { //2 фильма ДО 
+              this.similarFilms[i] = this.arrOfRecommended[INDEX - 1 - i];
+            }
+            else { //2 фильма ПОСЛЕ
+              this.similarFilms[i] = this.arrOfRecommended[INDEX - 1 + i];
+            }
+          }
+        }
+      
     },
 
     borderMaker(years, ratings, lengths) { //функция, которая задает границы для фильтрации

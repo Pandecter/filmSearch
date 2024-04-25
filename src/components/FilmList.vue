@@ -18,7 +18,7 @@
       variant="outlined"
       hover
       link
-      @click="film = filmData"
+      @click="extendInit(filmData)"
     >  
       <v-card-item>
         <v-card-title> 
@@ -77,9 +77,13 @@ export default {
 			this.filmStore.filmDataStorage[INDEX].filmRating = data.rating;
 		},
 
-    updateFilm(recomendedFilm) {
-      this.film = recomendedFilm;
-    }
+    updateFilm(recommendedFilm) {
+      this.film = recommendedFilm;
+    },
+
+    extendInit(filmData) {
+      this.film = filmData;
+    } 
 	}
 }
 </script>

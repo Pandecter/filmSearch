@@ -91,16 +91,16 @@
         </p>
         <div class="d-flex justify-space-around w-100 mt-4">
           <div 
-            v-for="recomendedFilm in filmData.similarFilms"
-            :key="recomendedFilm.id"
+            v-for="recommendedFilm in filmStore.similarFilms"
+            :key="recommendedFilm.id"
           >   
             <v-img 
               class="ml-4"
-              :src="recomendedFilm.poster.url"
+              :src="recommendedFilm.poster.url"
               width="10vw"
               height="20vh"
-              :title="recomendedFilm.name"
-              @click="updateCardInfo(recomendedFilm)"
+              :title="recommendedFilm.name"
+              @click="updateCardInfo(recommendedFilm)"
             />
           </div>
         </div>
@@ -140,12 +140,12 @@ export default {
     filmData(newValue, oldValue) {
       if (newValue != oldValue) {
         this.currentRating = this.filmData.filmRating;
+        this.filmStore.makeRecommendedList(newValue);
       }
     }
   },
   methods: {
     changeRating(value){
-      console.log("Значение: " + this.filmData.filmRating)
       this.$emit('changeRating', {rating: value, id: this.filmData.id});
       this.filmStore.moveToFavorites(this.filmData);
     },
