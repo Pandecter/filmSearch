@@ -100,6 +100,7 @@
               width="10vw"
               height="20vh"
               :title="recomendedFilm.name"
+              @click="updateCardInfo(recomendedFilm)"
             />
           </div>
         </div>
@@ -128,7 +129,7 @@ export default {
       required: true
     }
   },
-  emits: ["changeRating"],
+  emits: ["changeRating", "updateInfo"],
   data() {
     return {
       filmStore: useFilmStore(),
@@ -148,6 +149,10 @@ export default {
       this.$emit('changeRating', {rating: value, id: this.filmData.id});
       this.filmStore.moveToFavorites(this.filmData);
     },
+
+    updateCardInfo(film) {
+      this.$emit('updateInfo', film);
+    }
   }
 }
 </script>

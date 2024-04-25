@@ -7,6 +7,7 @@
     <extended-card-component 
       :film-data="film ? film : filmStore.firstFilm"
       @change-rating="updateRating"
+      @update-info="updateFilm"
     />
     <v-card  
       v-for="filmData in filmStore.showResultArray"
@@ -74,7 +75,11 @@ export default {
 		updateRating(data) {
 			const INDEX = this.filmStore.filmDataStorage.findIndex((el) => el.id === data.id);
 			this.filmStore.filmDataStorage[INDEX].filmRating = data.rating;
-		}
+		},
+
+    updateFilm(recomendedFilm) {
+      this.film = recomendedFilm;
+    }
 	}
 }
 </script>
