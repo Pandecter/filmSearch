@@ -5,7 +5,7 @@ import router from '@/router'
 export const useFilmStore = defineStore('filmStorage', {
   state: () => {
     return {
-      filmDataStorage: [], // массив данных, который не будет меняться
+      filmDataStorage: [], // массив данных, размер и порядок элементов которого не будет меняться
       filmNames: [],
       selectedFilms: [], //здесь будут хранится фильмы с учетом фильтрации/сортировки
       paginationLength: 0,
@@ -33,7 +33,7 @@ export const useFilmStore = defineStore('filmStorage', {
       favButtonValue: "Добавить в закладки", 
       favorites: [], //массив фильмов, добавленных в закладки
       ascBut: [false, false, false], //необходимы для пометки кнопки конкретной сортировки как активной
-      desBut: [false, false, false] 
+      desBut: [false, false, false]
     }
   },
   actions : {
@@ -44,22 +44,32 @@ export const useFilmStore = defineStore('filmStorage', {
       let tempArr = []; 
 
       this.filmDataStorage = [...filmData.docs] //изначальный массив, взятый с JSON, над которым проводятся действия
+
+      for (let i = 0; i < this.filmDataStorage.length; i++) {
+        this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
+        this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
+        this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
+      }
+
+      if (this.favorites !== null) { //если есть данные с localStorage
+        for (let i = 0; i < this.favorites.length; i++) {
+          let INDEX = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
+          this.filmDataStorage[INDEX] = this.favorites[i];
+        }
+      }
       
-      tempArr = [...filmData.docs] //создадим временный массив, который дополним полем рекомендованных фильмов
+      tempArr = [...this.filmDataStorage] //создадим временный массив, который дополним полем рекомендованных фильмов
       tempArr.sort((a,b) =>  //сортируем массив по трем полям, чтоб сформировать схожие по рейтингу фильмы по возрастанию
         (a.rating.kp > b.rating.kp) ? 1 : (b.rating.kp > a.rating.kp) ? -1 : 0
       );
 
-      for (let i = 0; i < this.filmDataStorage.length; i++) {
+      for (let i = 0; i < tempArr.length; i++) {
         let filmId = this.filmDataStorage[i].id;
-        this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
-        this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
-        this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
         const INDEX = tempArr.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
 
         for (let j = 0; j < 4; j++) { 
           if (INDEX >= this.filmDataStorage.length - 2) {  //если фильм стоит после предпоследнего индекса включительно, то берем предыдущие 4 фильма
-            this.filmDataStorage[i].similarFilms[j] = tempArr[this.filmDataStorage.length - (2 + j)];
+            this.filmDataStorage[i].similarFilms[j] = tempArr[this.filmDataStorage.length - (3 + j)];
           }
           else if (INDEX <= 1) { //если фильм стоит до 1 индекса включительно, то берем следующие 4 фильма
             this.filmDataStorage[i].similarFilms[j] = tempArr[2 + j];
@@ -74,13 +84,6 @@ export const useFilmStore = defineStore('filmStorage', {
           }
         }
       } 
-
-      if (this.favorites !== null) { //если есть данные с localStorage
-        for (let i = 0; i < this.favorites.length; i++) {
-          let INDEX = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
-          this.filmDataStorage[INDEX] = this.favorites[i];
-        }
-      }
 
       for (let i = 0; i < this.filmDataStorage.length; i++) { 
         this.selectedFilms[i] = this.filmDataStorage[i]; 
@@ -376,5 +379,9 @@ export const useFilmStore = defineStore('filmStorage', {
       }
       return this.filmNames;
     },
+
+    firstFilm() {
+      return this.filmDataStorage[0];
+    }
   }
 })

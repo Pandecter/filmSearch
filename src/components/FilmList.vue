@@ -5,7 +5,7 @@
     fill-height
   >
     <extended-card-component 
-      :film-data="film"
+      :film-data="film ? film : filmStore.firstFilm"
       @change-rating="updateRating"
     />
     <v-card  
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       filmStore: useFilmStore(),
-			film:	{},
+      film: {}
     }
   },
 	methods: {
