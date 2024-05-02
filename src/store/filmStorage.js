@@ -41,22 +41,20 @@ export const useFilmStore = defineStore('filmStorage', {
   },
   actions : {
     moveToStorageArrays() { //функция, которая вызывается при запуске приложения
-      let arrOfYears = [];
-      let arrOfRating = [];
-      let arrOfLength = [];
-      //let tempArr = []; 
+      const ARR_OF_YEARS = [];
+      const ARR_OF_RATING = [];
+      const ARR_OF_LENGTH = [];
 
       this.filmDataStorage = [...filmData.docs] //изначальный массив, взятый с JSON, над которым проводятся действия
 
       for (let i = 0; i < this.filmDataStorage.length; i++) {
-        //this.filmDataStorage[i] = {...this.filmDataStorage[i], similarFilms: []} //добавим поле с реком. фильмами
         this.filmDataStorage[i] = {...this.filmDataStorage[i], filmRating: 0} //добавим поле с рейтингом 
         this.filmDataStorage[i] = {...this.filmDataStorage[i], isFavorite: false} //добавим поле для избранного
       }
 
       if (this.favorites !== null) { //если есть данные с localStorage
         for (let i = 0; i < this.favorites.length; i++) {
-          let INDEX = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
+          const INDEX = this.filmDataStorage.findIndex((el) => el.id === this.favorites[i].id);
           this.filmDataStorage[INDEX] = this.favorites[i];
         }
       }
@@ -70,12 +68,12 @@ export const useFilmStore = defineStore('filmStorage', {
         this.selectedFilms[i] = this.filmDataStorage[i]; 
         this.selectedFilms[i].rating.kp =  Number(this.selectedFilms[i].rating.kp).toFixed(1);
 
-        arrOfYears[i] = this.filmDataStorage[i].year;
-        arrOfRating[i] = this.filmDataStorage[i].rating.kp;
-        arrOfLength[i] = this.filmDataStorage[i].movieLength;
+        ARR_OF_YEARS[i] = this.filmDataStorage[i].year;
+        ARR_OF_RATING[i] = this.filmDataStorage[i].rating.kp;
+        ARR_OF_LENGTH[i] = this.filmDataStorage[i].movieLength;
       }
 
-      this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
+      this.borderMaker(ARR_OF_YEARS, ARR_OF_RATING, ARR_OF_LENGTH);
 
       this.valuesOfRange = [...this.borderValuesOfFilters]; //заполним на старте значения текущей фильтрации граничными
 
@@ -84,8 +82,8 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     makeRecommendedList(currentFilm) {
-        let filmId = currentFilm.id;
-        const INDEX = this.arrOfRecommended.findIndex((el) => el.id === filmId); //ищем индекс текущего фильма в массиве похожих фильмов
+        const FILM_ID = currentFilm.id;
+        const INDEX = this.arrOfRecommended.findIndex((el) => el.id === FILM_ID); //ищем индекс текущего фильма в массиве похожих фильмов
 
         for (let i = 0; i < 4; i++) { 
           
@@ -108,19 +106,19 @@ export const useFilmStore = defineStore('filmStorage', {
     },
 
     borderMaker(years, ratings, lengths) { //функция, которая задает границы для фильтрации
-      let arrForBorders = [];
+      const ARR_FOR_BORDERS = [];
 
       this.borderValuesOfFilters.length = 0; //необходимо, чтоб массив при переходе со страницы на страницу бесконечно не заполнялся
 
-      this.borderValuesOfFilters.push(arrForBorders.slice());
+      this.borderValuesOfFilters.push(ARR_FOR_BORDERS.slice());
       this.borderValuesOfFilters[0][0] = Math.min.apply(Math, years);
       this.borderValuesOfFilters[0][1] = Math.max.apply(Math, years);
 
-      this.borderValuesOfFilters.push(arrForBorders.slice());
+      this.borderValuesOfFilters.push(ARR_FOR_BORDERS.slice());
       this.borderValuesOfFilters[1][0] = Math.min.apply(Math, ratings);
       this.borderValuesOfFilters[1][1] = Math.max.apply(Math, ratings);
 
-      this.borderValuesOfFilters.push(arrForBorders.slice());
+      this.borderValuesOfFilters.push(ARR_FOR_BORDERS.slice());
       this.borderValuesOfFilters[2][0] = Math.min.apply(Math, lengths);
       this.borderValuesOfFilters[2][1] = Math.max.apply(Math, lengths);
     },
@@ -144,11 +142,11 @@ export const useFilmStore = defineStore('filmStorage', {
       this.ascBut[choice] = true;
       this.sortChoice[0] = choice;
       this.sortChoice[1] = null;  
-      let field = this.arrOfFields[choice];
+      const FIELD = this.arrOfFields[choice];
       if (choice == 1) { // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
-        this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? 1 : ((b[field].kp > a[field].kp) ? -1 : 0))
+        this.selectedFilms.sort((a,b) => (a[FIELD].kp > b[FIELD].kp) ? 1 : ((b[FIELD].kp > a[FIELD].kp) ? -1 : 0))
       }
-      this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0))
+      this.selectedFilms.sort((a,b) => (a[FIELD] > b[FIELD]) ? 1 : ((b[FIELD] > a[FIELD]) ? -1 : 0))
     },
 
     descendingSort(choice) { //сортировка по убыванию
@@ -157,11 +155,11 @@ export const useFilmStore = defineStore('filmStorage', {
       this.desBut[choice] = true;
       this.sortChoice[0] = null;
       this.sortChoice[1] = choice;
-      let field = this.arrOfFields[choice];
+      const FIELD = this.arrOfFields[choice];
       if (choice == 1) { // для "rating.kp" стандартный алгоритм работать не будет, cледовательно:
-        this.selectedFilms.sort((a,b) => (a[field].kp > b[field].kp) ? -1 : ((b[field].kp > a[field].kp) ? 1 : 0))
+        this.selectedFilms.sort((a,b) => (a[FIELD].kp > b[FIELD].kp) ? -1 : ((b[FIELD].kp > a[FIELD].kp) ? 1 : 0))
       }
-      this.selectedFilms.sort((a,b) => (a[field] > b[field]) ? -1 : ((b[field] > a[field]) ? 1 : 0))
+      this.selectedFilms.sort((a,b) => (a[FIELD] > b[FIELD]) ? -1 : ((b[FIELD] > a[FIELD]) ? 1 : 0))
     },
 
     restartSort() { //сброс сортровки
@@ -306,8 +304,8 @@ export const useFilmStore = defineStore('filmStorage', {
         localStorage.setItem("favorites", JSON.stringify(this.favorites));
       }
       else { //если элемент повторяется, то подразумевается, что пользователь мог изменить оценку (кнопку трогать он не может)
-        let index = this.favorites.findIndex((el) => el.id === filmData.id);
-        this.favorites[index].filmRating = filmData.filmRating;
+        const INDEX = this.favorites.findIndex((el) => el.id === filmData.id);
+        this.favorites[INDEX].filmRating = filmData.filmRating;
         localStorage.setItem("favorites", JSON.stringify(this.favorites));
       }
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
@@ -315,14 +313,14 @@ export const useFilmStore = defineStore('filmStorage', {
 
     removeFromFavorites(filmData) { //метод, который убирает фильм из закладок
       let updatedStorage = JSON.parse(localStorage.getItem("favorites")); //обновляем (удаляем элемент) список закладок
-      let tempName = filmData.name;
-      updatedStorage = updatedStorage.filter(item => item.name !== tempName);
+      const TEMP_NAME = filmData.name;
+      updatedStorage = updatedStorage.filter(item => item.name !== TEMP_NAME);
       localStorage.setItem("favorites", JSON.stringify(updatedStorage));
 
-      let index = this.filmDataStorage.findIndex(el => el.name === tempName); //обнуляем данные для корректной работы
-      this.filmDataStorage[index].filmRating = 0;
-      this.filmDataStorage[index].isFavorite = false;
-      this.favorites = this.favorites.filter(item => item.name !== tempName);
+      const INDEX = this.filmDataStorage.findIndex(el => el.name === TEMP_NAME); //обнуляем данные для корректной работы
+      this.filmDataStorage[INDEX].filmRating = 0;
+      this.filmDataStorage[INDEX].isFavorite = false;
+      this.favorites = this.favorites.filter(item => item.name !== TEMP_NAME);
       this.favoritesBorderChanger();
       this.valueOfRangeFavorites = [...this.borderValuesOfFilters];
     },
@@ -342,28 +340,28 @@ export const useFilmStore = defineStore('filmStorage', {
       else{
         this.dialog = false;
         router.push('/');
-        let arrOfYears = [];
-        let arrOfRating = [];
-        let arrOfLength = [];
+        const ARR_OF_YEARS = [];
+        const ARR_OF_RATING = [];
+        const ARR_OF_LENGTH = [];
         for (let i = 0; i < this.filmDataStorage.length; i++) { 
-          arrOfYears[i] = this.filmDataStorage[i].year;
-          arrOfRating[i] = this.filmDataStorage[i].rating.kp;
-          arrOfLength[i] = this.filmDataStorage[i].movieLength;
+          ARR_OF_YEARS[i] = this.filmDataStorage[i].year;
+          ARR_OF_RATING[i] = this.filmDataStorage[i].rating.kp;
+          ARR_OF_LENGTH[i] = this.filmDataStorage[i].movieLength;
         }
-        this.borderMaker(arrOfYears, arrOfRating, arrOfLength);
+        this.borderMaker(ARR_OF_YEARS, ARR_OF_RATING, ARR_OF_LENGTH);
       }
     },
     
     favoritesBorderChanger() { //вспомогательный метод, который меняет границы фильтрации при удалении/добавлении закладок
-      let yearsFavorite = [];
-      let ratingsFavorite = [];
-      let lengthsFavorite = [];
+      const YEARS_FAVORITES = [];
+      const RATING_FAVORITES = [];
+      const LENGTH_FAVORITES = [];
       for (let i = 0; i < this.favorites.length; i++) { 
-        yearsFavorite[i] = this.favorites[i].year;
-        ratingsFavorite[i] = this.favorites[i].rating.kp;
-        lengthsFavorite[i] = this.favorites[i].movieLength;
+        YEARS_FAVORITES[i] = this.favorites[i].year;
+        RATING_FAVORITES[i] = this.favorites[i].rating.kp;
+        LENGTH_FAVORITES[i] = this.favorites[i].movieLength;
       }
-      this.borderMaker(yearsFavorite, ratingsFavorite, lengthsFavorite);
+      this.borderMaker(YEARS_FAVORITES, RATING_FAVORITES, LENGTH_FAVORITES);
     },
 
     fromDialogToMainPage() { //метод, который вызывается из диалогового онка
